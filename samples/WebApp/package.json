@@ -1,0 +1,41 @@
+{
+  "name": "webpack-aspnetcore-sample",
+  "version": "1.0.0",
+  "description": "sample web app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env NODE_ENV=development webpack-dev-server --env=dev --progress --profile --colors",
+    "build": "del-cli wwwroot/static wwwroot/asset-manifest.json && cross-env NODE_ENV=production webpack --env=prod --profile --colors --progress"
+  },
+  "author": "Sergey Solovev",
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "7.1.2",
+    "babel-cli": "6.26.0",
+    "babel-core": "6.26.0",
+    "babel-loader": "7.1.1",
+    "babel-plugin-syntax-dynamic-import": "6.18.0",
+    "babel-preset-es2015": "6.24.1",
+    "cross-env": "5.0.5",
+    "css-loader": "0.28.4",
+    "del-cli": "1.1.0",
+    "extract-text-webpack-plugin": "3.0.0",
+    "file-loader": "0.11.2",
+    "imports-loader": "0.7.1",
+    "less": "2.7.2",
+    "less-loader": "4.0.5",
+    "postcss-flexbugs-fixes": "3.2.0",
+    "postcss-loader": "2.0.6",
+    "style-loader": "0.18.2",
+    "uglifyjs-webpack-plugin": "0.4.6",
+    "webpack": "3.5.1",
+    "webpack-dev-server": "2.7.1",
+    "webpack-manifest-plugin": "1.2.1"
+  },
+  "dependencies": {
+    "bootstrap": "3.3.7",
+    "jquery": "3.2.1",
+    "promise": "8.0.1"
+  }
+}

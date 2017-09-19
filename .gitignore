@@ -1,0 +1,10 @@
+node_modules
+bin
+obj
+logs
+static
+asset-manifest.json
+.vs
+*.suo
+*.user
+*.log
