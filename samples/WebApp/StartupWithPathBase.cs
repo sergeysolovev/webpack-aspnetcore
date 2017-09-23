@@ -1,26 +1,36 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace WebApp
 {
-    public class Startup
+    /// <summary>
+    /// Provides an example of how to configure webpack
+    /// integration with non-empty path base (public path)
+    /// </summary>
+    public class StartupWithPathBase
     {
-        public Startup(IConfiguration configuration)
+        public StartupWithPathBase(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            Environment = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment Environment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
             services.AddWebpack(options =>
             {
-                options.UseDevServer = true;
+                if (Environment.IsDevelopment())
+                {
+                    options.UseDevServer = true;
+                    options.DevServerPublicPath = "/public/";
+                }
             });
         }
 
@@ -28,6 +38,7 @@ namespace WebApp
         {
             if (env.IsDevelopment())
             {
+                app.UsePathBase("/public/");
                 app.UseDeveloperExceptionPage();
             }
             else

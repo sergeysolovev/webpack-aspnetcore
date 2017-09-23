@@ -1,21 +1,23 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Threading.Tasks;
+using Webpack.AspNetCore.Internal;
 
-namespace Webpack.AspNetCore
+namespace Webpack.AspNetCore.Static
 {
-    public class WepbackAssetUrlRepository
+    internal class StaticAssetUrlRepository : IAssetUrlRepository
     {
         private readonly WebpackContext context;
-        private readonly WebpackManifestStorage storage;
+        private readonly ManifestStorage storage;
         private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly ILogger<WepbackAssetUrlRepository> logger;
+        private readonly ILogger<StaticAssetUrlRepository> logger;
 
-        public WepbackAssetUrlRepository(
+        public StaticAssetUrlRepository(
             WebpackContext context,
-            WebpackManifestStorage storage,
+            ManifestStorage storage,
             IHttpContextAccessor httpContextAccessor,
-            ILogger<WepbackAssetUrlRepository> logger)
+            ILogger<StaticAssetUrlRepository> logger)
         {
             this.context = context ??
                 throw new ArgumentNullException(nameof(context));
@@ -30,13 +32,13 @@ namespace Webpack.AspNetCore
                 throw new ArgumentNullException(nameof(logger));
         }
 
-        public string Get(string manifestAssetKey)
+        public ValueTask<string> Get(string manifestAssetKey)
         {
             var manifestAssetUrl = storage.Get(manifestAssetKey) ?? storage.Get(withForwardSlash());
 
             if (string.IsNullOrEmpty(manifestAssetUrl))
             {
-                return null;
+                return new ValueTask<string>(result: null);
             }
 
             var options = context.Options;
@@ -53,7 +55,7 @@ namespace Webpack.AspNetCore
                 $"Public path: '{publicPath}'. Asset path base: '{context.ManifestPathBase}'"
             );
 
-            return assetUrl;
+            return new ValueTask<string>(result: assetUrl);
 
             string withForwardSlash() => manifestAssetKey.Replace('/', '\\');
             PathString makePath(string value) => new PathString('/' + value.Trim('/'));

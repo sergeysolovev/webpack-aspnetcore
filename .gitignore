@@ -2,7 +2,7 @@ node_modules
 bin
 obj
 logs
-static
+wwwroot/static
 asset-manifest.json
 .vs
 *.suo

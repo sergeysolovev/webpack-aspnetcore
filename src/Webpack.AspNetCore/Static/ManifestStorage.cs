@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Webpack.AspNetCore
 {
-    public class WebpackManifestStorage
+    internal class ManifestStorage
     {
         private readonly ConcurrentDictionary<string, string> storage;
 
-        public WebpackManifestStorage()
+        public ManifestStorage()
         {
             storage = new ConcurrentDictionary<string, string>();
         }

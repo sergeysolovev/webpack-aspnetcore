@@ -5,14 +5,16 @@ using Microsoft.Extensions.Options;
 using System;
 using System.IO;
 
-namespace Webpack.AspNetCore
+namespace Webpack.AspNetCore.Internal
 {
-    public class WebpackContext
+    internal class WebpackContext
     {
         public WebpackOptions Options { get; set; }
         public IFileProvider AssetFileProvider { get; private set; }
         public PathString ManifestPathBase { get; private set; }
         public string ManifestFileName { get; private set; }
+        public string DevServerHost { get; private set; }
+        public Uri DevServerManifestUri { get; private set; }
 
         public IFileInfo GetManifestFileInfo()
         {
@@ -44,6 +46,27 @@ namespace Webpack.AspNetCore
             AssetFileProvider = new PhysicalFileProvider(manifestRootPath);
             ManifestFileName = manifestFileName;
             ManifestPathBase = getManifestPathBase();
+
+            if (Options.UseDevServer)
+            {
+                DevServerHost = getDevServerHost();
+                DevServerManifestUri = getDevServerManifestUri();
+            }
+
+            string getDevServerHost() => $"{Options.DevServerHost}:{Options.DevServerPort}";
+
+            Uri getDevServerManifestUri()
+            {
+                var uriBuilder = new UriBuilder
+                {
+                    Scheme = Options.DevServerScheme,
+                    Host = Options.DevServerHost,
+                    Port = Options.DevServerPort,
+                    Path = Options.DevServerPublicPath.Add(Options.ManifestPath)
+                };
+
+                return uriBuilder.Uri;
+            }
 
             PathString getManifestPathBase()
             {

@@ -20,6 +20,28 @@ namespace Webpack.AspNetCore
 
         public bool UseStaticFiles { get; set; }
 
+        public bool UseDevServer { get; set; }
+
+        /// <summary>
+        /// Default - 127.0.0.1
+        /// </summary>
+        public string DevServerHost { get; set; } = "127.0.0.1";
+
+        /// <summary>
+        /// Default - 8080
+        /// </summary>
+        public int DevServerPort { get; set; } = 8080;
+
+        /// <summary>
+        /// Default - http
+        /// </summary>
+        public string DevServerScheme { get; set; } = "http";
+
+        /// <summary>
+        /// Default - /
+        /// </summary>
+        public PathString DevServerPublicPath { get; set; } = PathString.Empty;
+
         /// <summary>
         /// Useful for reverse proxy url rewriting
         /// Only relevant if UseStaticFiles is set to false, otherwise it's ignored

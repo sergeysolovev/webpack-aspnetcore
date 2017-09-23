@@ -1,4 +1,4 @@
-﻿@inject WebpackAssetMapper assets
+﻿@inject AssetUrlMapper assets
 
 <!DOCTYPE html>
 <html>
@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebApp</title>
-    <link rel="stylesheet" href="@assets(@"index.css")" />
+    <link rel="stylesheet" href="@await assets(@"index.css")" />
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -36,6 +36,6 @@
             <p>&copy; 2017 - WebApp</p>
         </footer>
     </div>
-    <script src="@assets(@"index.js")"></script>
+    <script src="@await assets(@"index.js")"></script>
 </body>
 </html>

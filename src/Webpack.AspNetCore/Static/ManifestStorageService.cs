@@ -2,21 +2,22 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Webpack.AspNetCore.Internal;
 
-namespace Webpack.AspNetCore
+namespace Webpack.AspNetCore.Static
 {
-    public class WebpackManifestStorageService
+    internal class ManifestStorageService
     {
         private readonly WebpackContext context;
-        private readonly WebpackManifestReader reader;
-        private readonly WebpackManifestStorage storage;
-        private readonly ILogger<WebpackManifestStorageService> logger;
+        private readonly PhysicalFileManifestReader reader;
+        private readonly ManifestStorage storage;
+        private readonly ILogger<ManifestStorageService> logger;
 
-        public WebpackManifestStorageService(
+        public ManifestStorageService(
             WebpackContext context,
-            WebpackManifestReader reader,
-            WebpackManifestStorage storage,
-            ILogger<WebpackManifestStorageService> logger)
+            PhysicalFileManifestReader reader,
+            ManifestStorage storage,
+            ILogger<ManifestStorageService> logger)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.reader = reader ?? throw new ArgumentNullException(nameof(reader));
@@ -39,7 +40,7 @@ namespace Webpack.AspNetCore
 
             async Task updateStorage()
             {
-                var manifest = await reader.ReadAsync(context);
+                var manifest = await reader.ReadAsync();
                 if (manifest != null)
                 {
                     var changedKeys = storage.Update(manifest);

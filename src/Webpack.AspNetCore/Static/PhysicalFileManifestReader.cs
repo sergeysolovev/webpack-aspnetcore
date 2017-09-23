@@ -2,12 +2,20 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Webpack.AspNetCore.Internal;
 
-namespace Webpack.AspNetCore
+namespace Webpack.AspNetCore.Static
 {
-    public class WebpackManifestReader
+    internal class PhysicalFileManifestReader : IManifestReader
     {
-        public async Task<IDictionary<string, string>> ReadAsync(WebpackContext context)
+        private readonly WebpackContext context;
+
+        public PhysicalFileManifestReader(WebpackContext context)
+        {
+            this.context = context ?? throw new System.ArgumentNullException(nameof(context));
+        }
+
+        public async ValueTask<IDictionary<string, string>> ReadAsync()
         {
             var manifestFileInfo = context.GetManifestFileInfo();
             if (!manifestFileInfo.Exists)
@@ -29,15 +37,14 @@ namespace Webpack.AspNetCore
                                 manifestJson
                             );
                         }
-                        catch (JsonException ex)
+                        catch (JsonException)
                         {
-                            // todo: log exception
                             return null;
                         }
                     }
                 }
             }
-            catch (FileNotFoundException ex)
+            catch (FileNotFoundException)
             {
                 return null;
             }
