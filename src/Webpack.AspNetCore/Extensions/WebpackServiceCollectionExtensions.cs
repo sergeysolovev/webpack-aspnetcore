@@ -22,10 +22,10 @@ namespace Microsoft.Extensions.DependencyInjection
                 services.TryAddTransient<DevServerBackchannelFactory>();
                 services.TryAddSingleton<DevServerBackchannelFactoryContext>();
                 services.TryAddSingleton<DevServerManifestReader>();
-                services.TryAddScoped<DevServerManifestRepository>();
-                services.TryAddScoped<AssetUrlMapper>(sp =>
+                services.TryAddScoped<DevServerAssetPathRepository>();
+                services.TryAddScoped<AssetPathMapper>(sp =>
                 {
-                    var repository = sp.GetRequiredService<DevServerManifestRepository>();
+                    var repository = sp.GetRequiredService<DevServerAssetPathRepository>();
                     return assetKey => repository.Get(assetKey);
                 });
             }
@@ -34,10 +34,10 @@ namespace Microsoft.Extensions.DependencyInjection
                 services.TryAddSingleton<ManifestStorage>();
                 services.TryAddSingleton<PhysicalFileManifestReader>();
                 services.TryAddSingleton<ManifestStorageService>();
-                services.TryAddScoped<StaticAssetUrlRepository>();
-                services.TryAddScoped<AssetUrlMapper>(sp =>
+                services.TryAddScoped<StaticAssetPathRepository>();
+                services.TryAddScoped<AssetPathMapper>(sp =>
                 {
-                    var repository = sp.GetRequiredService<StaticAssetUrlRepository>();
+                    var repository = sp.GetRequiredService<StaticAssetPathRepository>();
                     return assetKey => repository.Get(assetKey);
                 });
             }

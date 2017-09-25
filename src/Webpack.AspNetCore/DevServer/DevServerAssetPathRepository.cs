@@ -8,23 +8,23 @@ using Webpack.AspNetCore.Internal;
 namespace Webpack.AspNetCore.DevServer
 {
     /// <summary>
-    /// Implementation of <see cref="IAssetUrlRepository"/>
+    /// Implementation of <see cref="IAssetPathRepository"/>
     /// for webpack dev server. Uses <see cref="HttpContext"/>
     /// to determine asset urls' path base.
     /// </summary>
-    internal class DevServerManifestRepository : IAssetUrlRepository
+    internal class DevServerAssetPathRepository : IAssetPathRepository
     {
         private readonly WebpackContext context;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly DevServerManifestReader manifestReader;
-        private readonly ILogger<DevServerManifestRepository> logger;
+        private readonly ILogger<DevServerAssetPathRepository> logger;
         private IDictionary<string, string> cachedManifest;
 
-        public DevServerManifestRepository(
+        public DevServerAssetPathRepository(
             WebpackContext context,
             DevServerManifestReader manifestReader,
             IHttpContextAccessor httpContextAccessor,
-            ILogger<DevServerManifestRepository> logger)
+            ILogger<DevServerAssetPathRepository> logger)
         {
             this.context = context ??
                 throw new ArgumentNullException(nameof(context));
@@ -39,6 +39,51 @@ namespace Webpack.AspNetCore.DevServer
                 throw new ArgumentNullException(nameof(logger));
         }
 
+        public async ValueTask<string> Get(string assetKey)
+        {
+            var manifest = await GetManifestAsync();
+
+            if (manifest != null)
+            {
+                if (manifest.TryGetValue(assetKey, out var assetUrl) ||
+                    manifest.TryGetValue(withForwardSlash(), out assetUrl))
+                {
+                    var options = context.Options;
+                    var assetRelativePath = makePath(assetUrl);
+                    var publicPath = makePath(httpContextAccessor.HttpContext.Request.PathBase);
+                    var devServerPublicPath = makePath(context.Options.DevServerPublicPath);
+
+                    if (publicPath != devServerPublicPath)
+                    {
+                        throw new WebpackDevServerException(
+                            $"The request's path base '{publicPath}' is different from " +
+                            $"webpack dev server public path '{devServerPublicPath}'. " +
+                            "They must have the same value"
+                        );
+                    }
+
+                    var assetPath = publicPath.Add(assetRelativePath).Value;
+
+                    logger.LogDebug(
+                        $"Mapped webpack asset key '{assetKey}' to the path '{assetPath}'. " +
+                        $"Public path: '{publicPath}'."
+                    );
+
+                    return assetPath;
+                }
+            }
+
+            return null;
+
+            string withForwardSlash() => assetKey.Replace('/', '\\');
+            PathString makePath(string value) => new PathString('/' + value.Trim('/'));
+        }
+
+        /// <summary>
+        /// Checks whether asset manifest contains a specified path
+        /// </summary>
+        /// <param name="requestPath"></param>
+        /// <returns></returns>
         public async ValueTask<bool> HasMatchingPath(string requestPath)
         {
             var manifest = await GetManifestAsync();
@@ -56,40 +101,6 @@ namespace Webpack.AspNetCore.DevServer
             }
 
             return false;
-        }
-
-        public async ValueTask<string> Get(string manifestAssetKey)
-        {
-            var manifest = await GetManifestAsync();
-
-            if (manifest != null)
-            {
-                if (manifest.TryGetValue(manifestAssetKey, out var manifestAssetUrl) ||
-                    manifest.TryGetValue(withForwardSlash(), out manifestAssetUrl))
-                {
-                    var options = context.Options;
-                    var assetPath = makePath(manifestAssetUrl);
-                    var publicPath = makePath(httpContextAccessor.HttpContext.Request.PathBase);
-                    var devServerPublicPath = makePath(context.Options.DevServerPublicPath);
-
-                    if (publicPath != devServerPublicPath)
-                    {
-                        throw new WebpackDevServerException(
-                            $"The request's path base '{publicPath}' is different from " +
-                            $"webpack dev server public path '{devServerPublicPath}'. " +
-                            "They must have the same value"
-                        );
-                    }
-
-                    var assetUrl = publicPath.Add(assetPath).Value;
-                    return assetUrl;
-                }
-            }
-
-            return null;
-
-            string withForwardSlash() => manifestAssetKey.Replace('/', '\\');
-            PathString makePath(string value) => new PathString('/' + value.Trim('/'));
         }
 
         private async ValueTask<IDictionary<string, string>> GetManifestAsync()

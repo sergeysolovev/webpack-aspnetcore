@@ -6,18 +6,23 @@ using Webpack.AspNetCore.Internal;
 
 namespace Webpack.AspNetCore.Static
 {
-    internal class StaticAssetUrlRepository : IAssetUrlRepository
+    /// <summary>
+    /// Implementation of <see cref="IAssetPathRepository"/>
+    /// for static webpack assets. Uses <see cref="HttpContext"/>
+    /// to determine asset urls' path base.
+    /// </summary>
+    internal class StaticAssetPathRepository : IAssetPathRepository
     {
         private readonly WebpackContext context;
         private readonly ManifestStorage storage;
         private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly ILogger<StaticAssetUrlRepository> logger;
+        private readonly ILogger<StaticAssetPathRepository> logger;
 
-        public StaticAssetUrlRepository(
+        public StaticAssetPathRepository(
             WebpackContext context,
             ManifestStorage storage,
             IHttpContextAccessor httpContextAccessor,
-            ILogger<StaticAssetUrlRepository> logger)
+            ILogger<StaticAssetPathRepository> logger)
         {
             this.context = context ??
                 throw new ArgumentNullException(nameof(context));
@@ -32,32 +37,36 @@ namespace Webpack.AspNetCore.Static
                 throw new ArgumentNullException(nameof(logger));
         }
 
-        public ValueTask<string> Get(string manifestAssetKey)
+        public ValueTask<string> Get(string assetKey)
         {
-            var manifestAssetUrl = storage.Get(manifestAssetKey) ?? storage.Get(withForwardSlash());
+            if (string.IsNullOrEmpty(assetKey))
+            {
+                return new ValueTask<string>(result: null);
+            }
 
-            if (string.IsNullOrEmpty(manifestAssetUrl))
+            var assetUrl = storage.Get(assetKey) ?? storage.Get(withForwardSlash());
+
+            if (string.IsNullOrEmpty(assetUrl))
             {
                 return new ValueTask<string>(result: null);
             }
 
             var options = context.Options;
             var pathBase = makePath(httpContextAccessor.HttpContext.Request.PathBase);
-            var assetPath = makePath(manifestAssetUrl);
+            var assetRelativePath = makePath(assetUrl);
             var publicPath = (options.UseStaticFiles || options.KeepOriginalAssetUrls) ?
                 pathBase :
                 pathBase.Add(context.ManifestPathBase);
+            var assetPath = publicPath.Add(assetRelativePath).Value;
 
-            var assetUrl = publicPath.Add(assetPath).Value;
-
-            logger.LogInformation(
-                $"Mapped webpack asset key '{manifestAssetKey}' to url '{assetUrl}'. " +
-                $"Public path: '{publicPath}'. Asset path base: '{context.ManifestPathBase}'"
+            logger.LogDebug(
+                $"Mapped webpack asset key '{assetKey}' to the path '{assetPath}'. " +
+                $"Public path: '{publicPath}'."
             );
 
-            return new ValueTask<string>(result: assetUrl);
+            return new ValueTask<string>(result: assetPath);
 
-            string withForwardSlash() => manifestAssetKey.Replace('/', '\\');
+            string withForwardSlash() => assetKey.Replace('/', '\\');
             PathString makePath(string value) => new PathString('/' + value.Trim('/'));
         }
     }

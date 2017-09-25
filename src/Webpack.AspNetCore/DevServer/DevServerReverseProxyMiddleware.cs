@@ -42,7 +42,7 @@ namespace Webpack.AspNetCore.DevServer
             }
         }
 
-        public async Task Invoke(HttpContext context, DevServerManifestRepository repository)
+        public async Task Invoke(HttpContext context, DevServerAssetPathRepository repository)
         {
             var userRequest = context.Request;
 
