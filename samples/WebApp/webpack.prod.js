@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const publicPath = process.env.PUBLIC_PATH || '/';
 const publicDir = 'wwwroot';
@@ -98,6 +99,9 @@ const config = {
         'NODE_ENV': JSON.stringify('production'),
         'process.env.PUBLIC_PATH': JSON.stringify(publicPath)
       }
+    }),
+    new CleanWebpackPlugin(['static', 'asset-manifest.json'], {
+      root: outputDir
     }),
     new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
