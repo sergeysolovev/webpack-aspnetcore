@@ -1,4 +1,6 @@
-﻿import './index.less';
+﻿import './polyfills/promise';
+
+import './index.less';
 import './images/banner1.svg';
 import './images/banner2.svg';
 import './images/banner3.svg';
