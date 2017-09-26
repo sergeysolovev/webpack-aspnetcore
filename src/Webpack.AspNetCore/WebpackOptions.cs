@@ -9,7 +9,6 @@ namespace Webpack.AspNetCore
         public WebpackOptions()
         {
             ManifestPath = new PathString("/asset-manifest.json");
-            RequestPath = PathString.Empty;
         }
 
         /// <summary>
@@ -17,8 +16,6 @@ namespace Webpack.AspNetCore
         /// Defaults to /asset-manifest.json
         /// </summary>
         public PathString ManifestPath { get; set; }
-
-        public PathString RequestPath { get; set; }
 
         public bool UseDevServer { get; set; }
 
