@@ -24,6 +24,7 @@ const config = {
     quiet: false,
     inline: true,
     lazy: false,
+    hot: true,
     host: "0.0.0.0"
   },
   resolve: {
@@ -102,6 +103,7 @@ const config = {
         'process.env.PUBLIC_PATH': JSON.stringify(publicPath)
       }
     }),
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       async: 'vendor',
