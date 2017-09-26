@@ -1,6 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
+  
   <PropertyGroup>
+    <Version>2.0.0-alpha.1</Version>
+    <Authors>Sergey Solovev</Authors>
+    <Description>ASP.NET Core library for building webpack assets' paths in runtime, based on the manifest, configuration and HTTP request context. Allows injecting the assets' paths into razor pages. Supports serving webpack dev server assets and services through a reverse proxy middleware. Supports serving static assets through Microsoft.AspNetCore.StaticFileMiddleware or Kestrel's reverse proxies (Nginx, Apache, IIS). Uses a single API for static and dev server assets.</Description>
+    <Copyright>Copyright © Sergey Solovev</Copyright>
+    <PackageTags>webpack,aspnetcore</PackageTags>
+    <PackageProjectUrl>https://github.com/sergeysolovev/webpack-aspnetcore</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sergeysolovev/webpack-aspnetcore</RepositoryUrl>
+    <PackageReleaseNotes>Release notes are at https://github.com/sergeysolovev/webpack-aspnetcore/releases</PackageReleaseNotes>
+    <PackageLicenseUrl>https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/LICENSE</PackageLicenseUrl>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
