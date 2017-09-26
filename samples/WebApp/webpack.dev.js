@@ -104,7 +104,6 @@ const config = {
       }
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       async: 'vendor',
       children: true
