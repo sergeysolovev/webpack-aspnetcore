@@ -79,7 +79,7 @@ const config = {
               },
             }
           ],
-          publicPath: '../../../'
+          publicPath
         })
       },
       {
