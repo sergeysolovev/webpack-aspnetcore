@@ -23,12 +23,9 @@ namespace Microsoft.AspNetCore.Builder
 
                 service.Start();
 
-                if (options.UseStaticFiles)
+                if (context.UseStaticFiles)
                 {
-                    app.UseStaticFiles(new StaticFileOptions
-                    {
-                        FileProvider = context.AssetFileProvider
-                    });
+                    app.UseStaticFiles(context.CreateStaticFileOptions());
                 }
             }
 

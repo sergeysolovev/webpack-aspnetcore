@@ -4,6 +4,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using System;
 using System.IO;
+using Microsoft.AspNetCore.Builder;
 
 namespace Webpack.AspNetCore.Internal
 {
@@ -15,10 +16,35 @@ namespace Webpack.AspNetCore.Internal
         public string ManifestFileName { get; private set; }
         public string DevServerHost { get; private set; }
         public Uri DevServerManifestUri { get; private set; }
+        public bool UseStaticFiles => (Options.StaticFileOptions != null);
 
         public IFileInfo GetManifestFileInfo()
         {
             return AssetFileProvider.GetFileInfo(ManifestFileName);
+        }
+
+        public StaticFileOptions CreateStaticFileOptions()
+        {
+            var sourceOptions = Options.StaticFileOptions;
+
+            if (sourceOptions == null)
+            {
+                throw new InvalidOperationException(
+                    $"{nameof(WebpackOptions.StaticFileOptions)} can not be null"
+                );
+            }
+
+            var options = new StaticFileOptions
+            {
+                FileProvider = AssetFileProvider,
+                ContentTypeProvider = sourceOptions.ContentTypeProvider,
+                DefaultContentType = sourceOptions.DefaultContentType,
+                ServeUnknownFileTypes = sourceOptions.ServeUnknownFileTypes,
+                RequestPath = sourceOptions.RequestPath,
+                OnPrepareResponse = sourceOptions.OnPrepareResponse
+            };
+
+            return options;
         }
 
         public WebpackContext(IOptions<WebpackOptions> options, IHostingEnvironment env)

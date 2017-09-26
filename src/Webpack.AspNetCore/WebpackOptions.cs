@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 
 namespace Webpack.AspNetCore
 {
@@ -17,8 +19,6 @@ namespace Webpack.AspNetCore
         public PathString ManifestPath { get; set; }
 
         public PathString RequestPath { get; set; }
-
-        public bool UseStaticFiles { get; set; }
 
         public bool UseDevServer { get; set; }
 
@@ -47,5 +47,13 @@ namespace Webpack.AspNetCore
         /// Only relevant if UseStaticFiles is set to false, otherwise it's ignored
         /// </summary>
         public bool KeepOriginalAssetUrls { get; set; }
+
+        internal StaticFileLimitedOptions StaticFileOptions { get; set; }
+
+        public void UseStaticFiles(Action<StaticFileLimitedOptions> configureOptions = null)
+        {
+            StaticFileOptions = new StaticFileLimitedOptions();
+            configureOptions?.Invoke(StaticFileOptions);
+        }
     }
 }
