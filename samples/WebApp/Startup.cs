@@ -8,20 +8,10 @@ namespace WebApp
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddWebpack(options =>
-            {
-                options.UseDevServer = true;
-            });
+            services.AddWebpack(options => options.UseDevServer());
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -36,13 +26,7 @@ namespace WebApp
             }
 
             app.UseWebpack();
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

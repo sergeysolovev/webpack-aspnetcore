@@ -17,7 +17,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.TryAddSingleton<WebpackContext>();
 
-            if (options.UseDevServer)
+            if (options.DevServerOptions != null)
             {
                 services.TryAddTransient<DevServerBackchannelFactory>();
                 services.TryAddSingleton<DevServerBackchannelFactoryContext>();

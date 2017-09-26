@@ -6,39 +6,35 @@ using Microsoft.Extensions.DependencyInjection;
 namespace WebApp
 {
     /// <summary>
-    /// Provides an example of how to configure webpack
-    /// integration with non-empty path base (public path)
+    /// Startup configuration example of how to configure webpack
+    /// integration with non-empty path base (public path) for dev server
+    /// To use this configuration, webpack static assets have to be built
+    /// with public path set to /public/:
+    /// unix:    export PUBLIC_PATH=/public/ && npm run build
+    /// windows: set "PUBLIC_PATH=/public/" && npm run build
     /// </summary>
     public class StartupWithPathBase
     {
-        public StartupWithPathBase(IConfiguration configuration, IHostingEnvironment env)
-        {
-            Configuration = configuration;
-            Environment = env;
-        }
+        public const string PublicPath = "/public/";
 
-        public IConfiguration Configuration { get; }
+        public StartupWithPathBase(IHostingEnvironment env)
+            => Environment = env;
+
         public IHostingEnvironment Environment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-
             services.AddWebpack(options =>
-            {
-                if (Environment.IsDevelopment())
-                {
-                    options.UseDevServer = true;
-                    options.DevServerPublicPath = "/public/";
-                }
-            });
+                options.UseDevServer(opts => opts.PublicPath = PublicPath)
+            );
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
-                app.UsePathBase("/public/");
+                app.UsePathBase(PublicPath);
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -47,13 +43,7 @@ namespace WebApp
             }
 
             app.UseWebpack();
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

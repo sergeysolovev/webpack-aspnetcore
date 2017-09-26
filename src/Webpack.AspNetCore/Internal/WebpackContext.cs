@@ -17,6 +17,7 @@ namespace Webpack.AspNetCore.Internal
         public string DevServerHost { get; private set; }
         public Uri DevServerManifestUri { get; private set; }
         public bool UseStaticFiles => (Options.StaticFileOptions != null);
+        public bool UseDevServer => (Options.DevServerOptions != null);
 
         public IFileInfo GetManifestFileInfo()
         {
@@ -73,22 +74,22 @@ namespace Webpack.AspNetCore.Internal
             ManifestFileName = manifestFileName;
             ManifestPathBase = getManifestPathBase();
 
-            if (Options.UseDevServer)
+            if (UseDevServer)
             {
                 DevServerHost = getDevServerHost();
                 DevServerManifestUri = getDevServerManifestUri();
             }
 
-            string getDevServerHost() => $"{Options.DevServerHost}:{Options.DevServerPort}";
+            string getDevServerHost() => $"{Options.DevServerOptions.Host}:{Options.DevServerOptions.Port}";
 
             Uri getDevServerManifestUri()
             {
                 var uriBuilder = new UriBuilder
                 {
-                    Scheme = Options.DevServerScheme,
-                    Host = Options.DevServerHost,
-                    Port = Options.DevServerPort,
-                    Path = Options.DevServerPublicPath.Add(Options.ManifestPath)
+                    Scheme = Options.DevServerOptions.Scheme,
+                    Host = Options.DevServerOptions.Host,
+                    Port = Options.DevServerOptions.Port,
+                    Path = Options.DevServerOptions.PublicPath.Add(Options.ManifestPath)
                 };
 
                 return uriBuilder.Uri;

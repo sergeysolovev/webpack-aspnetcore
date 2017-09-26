@@ -51,7 +51,7 @@ namespace Webpack.AspNetCore.DevServer
                     var options = context.Options;
                     var assetRelativePath = makePath(assetUrl);
                     var publicPath = makePath(httpContextAccessor.HttpContext.Request.PathBase);
-                    var devServerPublicPath = makePath(context.Options.DevServerPublicPath);
+                    var devServerPublicPath = makePath(context.Options.DevServerOptions.PublicPath);
 
                     if (publicPath != devServerPublicPath)
                     {

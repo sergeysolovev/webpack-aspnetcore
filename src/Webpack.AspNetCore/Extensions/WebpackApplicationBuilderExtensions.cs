@@ -11,9 +11,8 @@ namespace Microsoft.AspNetCore.Builder
         public static IApplicationBuilder UseWebpack(this IApplicationBuilder app)
         {
             var context = app.ApplicationServices.GetService<WebpackContext>();
-            var options = context.Options;
 
-            if (options.UseDevServer)
+            if (context.UseDevServer)
             {
                 app.UseMiddleware<DevServerReverseProxyMiddleware>();
             }

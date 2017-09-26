@@ -33,9 +33,9 @@ namespace Webpack.AspNetCore.DevServer
             {
                 var baseAddress = new UriBuilder
                 {
-                    Host = webpackContext.Options.DevServerHost,
-                    Port = webpackContext.Options.DevServerPort,
-                    Scheme = webpackContext.Options.DevServerScheme
+                    Host = webpackContext.Options.DevServerOptions.Host,
+                    Port = webpackContext.Options.DevServerOptions.Port,
+                    Scheme = webpackContext.Options.DevServerOptions.Scheme
                 };
 
                 return backchannelFactory.Create(baseAddress.Uri);
