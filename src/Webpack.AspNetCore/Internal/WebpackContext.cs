@@ -40,11 +40,13 @@ namespace Webpack.AspNetCore.Internal
                 ContentTypeProvider = sourceOptions.ContentTypeProvider,
                 DefaultContentType = sourceOptions.DefaultContentType,
                 ServeUnknownFileTypes = sourceOptions.ServeUnknownFileTypes,
-                RequestPath = sourceOptions.RequestPath,
+                RequestPath = removeTrailingSlash(sourceOptions.RequestPath),
                 OnPrepareResponse = sourceOptions.OnPrepareResponse
             };
 
             return options;
+
+            PathString removeTrailingSlash(string value) => new PathString(value.TrimEnd('/'));
         }
 
         public WebpackContext(IOptions<WebpackOptions> options, IHostingEnvironment env)

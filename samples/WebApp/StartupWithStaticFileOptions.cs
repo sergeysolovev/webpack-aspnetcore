@@ -19,7 +19,7 @@ namespace WebApp
             services.AddWebpack(options =>
             {
                 options.ConfigureStatic(opts => {
-                    opts.RequestPath = "/public";
+                    opts.RequestPath = "/public/";
                     opts.OnPrepareResponse = responseContext =>
                         responseContext.Context.Response.Headers.Add(
                             key: "Cache-control",
