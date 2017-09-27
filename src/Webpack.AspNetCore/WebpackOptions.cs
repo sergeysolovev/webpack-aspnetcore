@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Webpack.AspNetCore.Internal;
 
 namespace Webpack.AspNetCore
 {
@@ -9,34 +10,68 @@ namespace Webpack.AspNetCore
         public WebpackOptions()
         {
             ManifestPath = new PathString("/asset-manifest.json");
+            UseStaticFileMiddleware = true;
+            StaticOptions = new StaticOptions();
+            DevServerOptions = new DevServerOptions();
         }
 
         /// <summary>
-        /// The asset manifest path within the application's web root path.
-        /// Defaults to /asset-manifest.json
+        /// The asset manifest path  
+        /// within the application's web root path for static assets or
+        /// withing the dev server's public path for dev server assets
+        /// Default: /asset-manifest.json
         /// </summary>
         public PathString ManifestPath { get; set; }
 
         /// <summary>
-        /// Useful for reverse proxy url rewriting
-        /// Only relevant if UseStaticFiles is set to false, otherwise it's ignored
+        /// Determines whether to use <see cref="Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware"/>
+        /// to serve static assets from the root of <see cref="ManifestPath"/>.
+        /// Default: <c>true</c>
         /// </summary>
-        public bool KeepOriginalAssetUrls { get; set; }
+        public bool UseStaticFileMiddleware { get; set; }
 
-        internal StaticFileLimitedOptions StaticFileOptions { get; set; }
+        /// <summary>
+        /// Static options
+        /// </summary>
+        internal StaticOptions StaticOptions { get; set; }
 
+        /// <summary>
+        /// Dev server options
+        /// </summary>
         internal DevServerOptions DevServerOptions { get; set; }
 
-        public void UseStaticFiles(Action<StaticFileLimitedOptions> configureOptions = null)
+        /// <summary>
+        /// Whether to serve the assets and map their paths in
+        /// static or dev server mode. Default: <see cref="AssetServingMethod.Static"/>
+        /// </summary>
+        internal AssetServingMethod AssetServingMethod { get; set; }
+
+        /// <summary>
+        /// Configures static asset options
+        /// </summary>
+        /// <param name="setupAction"></param>
+        public void ConfigureStatic(Action<StaticOptions> setupAction)
         {
-            StaticFileOptions = new StaticFileLimitedOptions();
-            configureOptions?.Invoke(StaticFileOptions);
+            if (setupAction == null)
+            {
+                throw new ArgumentNullException(nameof(setupAction));
+            }
+
+            setupAction.Invoke(StaticOptions);
         }
 
-        public void UseDevServer(Action<DevServerOptions> configureOptions = null)
+        /// <summary>
+        /// Configure dev server asset options
+        /// </summary>
+        /// <param name="setupAction"></param>
+        public void ConfigureDevServer(Action<DevServerOptions> setupAction)
         {
-            DevServerOptions = new DevServerOptions();
-            configureOptions?.Invoke(DevServerOptions);
+            if (setupAction == null)
+            {
+                throw new ArgumentNullException(nameof(setupAction));
+            }
+
+            setupAction.Invoke(DevServerOptions);
         }
     }
 }

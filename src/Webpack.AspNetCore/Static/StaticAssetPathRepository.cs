@@ -54,10 +54,7 @@ namespace Webpack.AspNetCore.Static
             var options = context.Options;
             var pathBase = makePath(httpContextAccessor.HttpContext.Request.PathBase);
             var assetRelativePath = makePath(assetUrl);
-            var publicPath =
-                options.KeepOriginalAssetUrls ? pathBase :
-                context.UseStaticFiles ? pathBase.Add(context.Options.StaticFileOptions.RequestPath) :
-                pathBase.Add(context.ManifestPathBase);
+            var publicPath = pathBase.Add(context.StaticRequestPath);
             var assetPath = publicPath.Add(assetRelativePath).Value;
 
             logger.LogDebug(

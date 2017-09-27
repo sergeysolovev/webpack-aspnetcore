@@ -10,9 +10,9 @@ namespace Microsoft.AspNetCore.Builder
     /// Represents a limited set of options from <see cref="StaticFileOptions" />
     /// <see cref="SharedOptionsBase.FileProvider" /> is excluded
     /// </summary>
-    public class StaticFileLimitedOptions
+    public class StaticOptions
     {
-        public StaticFileLimitedOptions()
+        public StaticOptions()
         {
             OnPrepareResponse = _ => { };
         }

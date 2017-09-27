@@ -10,14 +10,13 @@ namespace Webpack.AspNetCore.Internal
 {
     internal class WebpackContext
     {
-        public WebpackOptions Options { get; set; }
+        public WebpackOptions Options { get; private set; }
         public IFileProvider AssetFileProvider { get; private set; }
-        public PathString ManifestPathBase { get; private set; }
         public string ManifestFileName { get; private set; }
         public string DevServerHost { get; private set; }
         public Uri DevServerManifestUri { get; private set; }
-        public bool UseStaticFiles => (Options.StaticFileOptions != null);
-        public bool UseDevServer => (Options.DevServerOptions != null);
+        public AssetServingMethod Method { get; private set; }
+        public PathString StaticRequestPath { get; private set; }
 
         public IFileInfo GetManifestFileInfo()
         {
@@ -26,12 +25,12 @@ namespace Webpack.AspNetCore.Internal
 
         public StaticFileOptions CreateStaticFileOptions()
         {
-            var sourceOptions = Options.StaticFileOptions;
+            var sourceOptions = Options.StaticOptions;
 
             if (sourceOptions == null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(WebpackOptions.StaticFileOptions)} can not be null"
+                    $"{nameof(WebpackOptions.StaticOptions)} can not be null"
                 );
             }
 
@@ -72,9 +71,10 @@ namespace Webpack.AspNetCore.Internal
 
             AssetFileProvider = new PhysicalFileProvider(manifestRootPath);
             ManifestFileName = manifestFileName;
-            ManifestPathBase = getManifestPathBase();
+            Method = Options.AssetServingMethod;
+            StaticRequestPath = Options.StaticOptions.RequestPath;
 
-            if (UseDevServer)
+            if (Method == AssetServingMethod.DevServer)
             {
                 DevServerHost = getDevServerHost();
                 DevServerManifestUri = getDevServerManifestUri();
@@ -93,15 +93,6 @@ namespace Webpack.AspNetCore.Internal
                 };
 
                 return uriBuilder.Uri;
-            }
-
-            PathString getManifestPathBase()
-            {
-                var contentRootDirUrl = new Uri(env.ContentRootPath + Path.DirectorySeparatorChar);
-                var manifestRootPathUrl = new Uri(manifestRootPath);
-                var manifestPathBaseUrl = contentRootDirUrl.MakeRelativeUri(manifestRootPathUrl).ToString();
-
-                return new PathString('/' + manifestPathBaseUrl);
             }
         }
     }

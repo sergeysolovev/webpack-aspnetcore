@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace WebApp
@@ -21,7 +18,7 @@ namespace WebApp
             services.AddMvc();
             services.AddWebpack(options =>
             {
-                options.UseStaticFiles(opts => {
+                options.ConfigureStatic(opts => {
                     opts.RequestPath = "/public";
                     opts.OnPrepareResponse = responseContext =>
                         responseContext.Context.Response.Headers.Add(
@@ -34,16 +31,19 @@ namespace WebApp
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsProduction())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/Home/Error");
+                app.UseWebpackStatic();
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                throw new System.NotSupportedException(
+                    $"{env.EnvironmentName} environment is not supported " +
+                    $"for {nameof(StartupWithStaticFileOptions)}"
+                );
             }
 
-            app.UseWebpack();
             app.UseMvcWithDefaultRoute();
         }
     }

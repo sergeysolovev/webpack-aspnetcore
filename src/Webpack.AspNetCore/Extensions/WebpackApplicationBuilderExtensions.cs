@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Webpack.AspNetCore;
 using Webpack.AspNetCore.DevServer;
 using Webpack.AspNetCore.Internal;
@@ -8,24 +9,37 @@ namespace Microsoft.AspNetCore.Builder
 {
     public static class WebpackApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseWebpack(this IApplicationBuilder app)
-        {
-            var context = app.ApplicationServices.GetService<WebpackContext>();
+        public static IApplicationBuilder UseWebpackDevServer(this IApplicationBuilder app)
+            => UseWebpack(app, withDevServer: true);
 
-            if (context.UseDevServer)
+        public static IApplicationBuilder UseWebpackStatic(this IApplicationBuilder app)
+            => UseWebpack(app, withDevServer: false);
+
+        private static IApplicationBuilder UseWebpack(IApplicationBuilder app, bool withDevServer)
+        {
+            if (withDevServer)
             {
+                app.ApplicationServices
+                    .GetRequiredService<IOptions<WebpackOptions>>()
+                    .Value
+                    .AssetServingMethod = AssetServingMethod.DevServer;
+
                 app.UseMiddleware<DevServerReverseProxyMiddleware>();
             }
             else
             {
-                var service = app.ApplicationServices.GetService<ManifestStorageService>();
+                app.ApplicationServices
+                    .GetRequiredService<ManifestStorageService>()
+                    .Start();
+            }
 
-                service.Start();
+            var context = app
+                .ApplicationServices
+                .GetRequiredService<WebpackContext>();
 
-                if (context.UseStaticFiles)
-                {
-                    app.UseStaticFiles(context.CreateStaticFileOptions());
-                }
+            if (context.Options.UseStaticFileMiddleware)
+            {
+                app.UseStaticFiles(context.CreateStaticFileOptions());
             }
 
             return app;

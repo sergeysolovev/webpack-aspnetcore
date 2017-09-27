@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace WebApp
@@ -11,7 +9,7 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddWebpack(options => options.UseDevServer());
+            services.AddWebpack();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -19,13 +17,14 @@ namespace WebApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseWebpackDevServer();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseWebpackStatic();
             }
 
-            app.UseWebpack();
             app.UseMvcWithDefaultRoute();
         }
     }

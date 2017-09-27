@@ -10,37 +10,35 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class WebpackServiceCollectionExtensions
     {
-        public static IServiceCollection AddWebpack(this IServiceCollection services, Action<WebpackOptions> setupAction)
+        public static IServiceCollection AddWebpack(this IServiceCollection services, Action<WebpackOptions> setupAction = null)
         {
             createAndConfigureOptions(out WebpackOptions options);
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.TryAddSingleton<WebpackContext>();
+            services.TryAddScoped<AssetPathMapper>(sp =>
+            {
+                var context = sp.GetRequiredService<WebpackContext>();
+                var withDevServer = (context.Method == AssetServingMethod.DevServer);
 
-            if (options.DevServerOptions != null)
-            {
-                services.TryAddTransient<DevServerBackchannelFactory>();
-                services.TryAddSingleton<DevServerBackchannelFactoryContext>();
-                services.TryAddSingleton<DevServerManifestReader>();
-                services.TryAddScoped<DevServerAssetPathRepository>();
-                services.TryAddScoped<AssetPathMapper>(sp =>
-                {
-                    var repository = sp.GetRequiredService<DevServerAssetPathRepository>();
-                    return assetKey => repository.Get(assetKey);
-                });
-            }
-            else
-            {
-                services.TryAddSingleton<ManifestStorage>();
-                services.TryAddSingleton<PhysicalFileManifestReader>();
-                services.TryAddSingleton<ManifestStorageService>();
-                services.TryAddScoped<StaticAssetPathRepository>();
-                services.TryAddScoped<AssetPathMapper>(sp =>
-                {
-                    var repository = sp.GetRequiredService<StaticAssetPathRepository>();
-                    return assetKey => repository.Get(assetKey);
-                });
-            }
+                var repository = withDevServer ?
+                    sp.GetRequiredService<DevServerAssetPathRepository>() as IAssetPathRepository :
+                    sp.GetRequiredService<StaticAssetPathRepository>() as IAssetPathRepository;
+
+                return assetKey => repository.Get(assetKey);
+            });
+
+            // dev server services
+            services.TryAddTransient<DevServerBackchannelFactory>();
+            services.TryAddSingleton<DevServerBackchannelFactoryContext>();
+            services.TryAddSingleton<DevServerManifestReader>();
+            services.TryAddScoped<DevServerAssetPathRepository>();
+            
+            // static services
+            services.TryAddSingleton<ManifestStorage>();
+            services.TryAddSingleton<PhysicalFileManifestReader>();
+            services.TryAddSingleton<ManifestStorageService>();
+            services.TryAddScoped<StaticAssetPathRepository>();
 
             return services;
 
