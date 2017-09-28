@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace Microsoft.AspNetCore.Builder
 {
@@ -7,6 +8,11 @@ namespace Microsoft.AspNetCore.Builder
     /// </summary>
     public class DevServerOptions
     {
+        public DevServerOptions()
+        {
+            StaticOptions = new StaticOptions();
+        }
+
         /// <summary>
         /// Host. Default: 127.0.0.1
         /// <remarks>
@@ -30,5 +36,24 @@ namespace Microsoft.AspNetCore.Builder
         /// Public path
         /// </summary>
         public PathString PublicPath { get; set; }
+
+        /// <summary>
+        /// Configures static asset options for dev server
+        /// </summary>
+        /// <param name="setupAction"></param>
+        public void ConfigureStatic(Action<StaticOptions> setupAction)
+        {
+            if (setupAction == null)
+            {
+                throw new ArgumentNullException(nameof(setupAction));
+            }
+
+            setupAction.Invoke(StaticOptions);
+        }
+
+        /// <summary>
+        /// Static options for dev server
+        /// </summary>
+        internal StaticOptions StaticOptions { get; set; }
     }
 }

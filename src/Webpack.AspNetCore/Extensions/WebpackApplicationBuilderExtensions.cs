@@ -25,24 +25,31 @@ namespace Microsoft.AspNetCore.Builder
                     .AssetServingMethod = AssetServingMethod.DevServer;
 
                 app.UseMiddleware<DevServerReverseProxyMiddleware>();
+
+                var context = getContext();
+                if (context.Options.UseStaticFileMiddleware)
+                {
+                    app.UseStaticFiles(context.CreateDevServerStaticFileOptions());
+                }
             }
             else
             {
                 app.ApplicationServices
                     .GetRequiredService<ManifestStorageService>()
                     .Start();
-            }
 
-            var context = app
-                .ApplicationServices
-                .GetRequiredService<WebpackContext>();
-
-            if (context.Options.UseStaticFileMiddleware)
-            {
-                app.UseStaticFiles(context.CreateStaticFileOptions());
+                var context = getContext();
+                if (context.Options.UseStaticFileMiddleware)
+                {
+                    app.UseStaticFiles(context.CreateStaticFileOptions());
+                }
             }
 
             return app;
+
+            WebpackContext getContext() => app
+                .ApplicationServices
+                .GetRequiredService<WebpackContext>();
         }
     }
 }

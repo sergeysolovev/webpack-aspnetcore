@@ -18,37 +18,6 @@ namespace Webpack.AspNetCore.Internal
         public AssetServingMethod Method { get; private set; }
         public PathString StaticRequestPath { get; private set; }
 
-        public IFileInfo GetManifestFileInfo()
-        {
-            return AssetFileProvider.GetFileInfo(ManifestFileName);
-        }
-
-        public StaticFileOptions CreateStaticFileOptions()
-        {
-            var sourceOptions = Options.StaticOptions;
-
-            if (sourceOptions == null)
-            {
-                throw new InvalidOperationException(
-                    $"{nameof(WebpackOptions.StaticOptions)} can not be null"
-                );
-            }
-
-            var options = new StaticFileOptions
-            {
-                FileProvider = AssetFileProvider,
-                ContentTypeProvider = sourceOptions.ContentTypeProvider,
-                DefaultContentType = sourceOptions.DefaultContentType,
-                ServeUnknownFileTypes = sourceOptions.ServeUnknownFileTypes,
-                RequestPath = removeTrailingSlash(sourceOptions.RequestPath),
-                OnPrepareResponse = sourceOptions.OnPrepareResponse
-            };
-
-            return options;
-
-            PathString removeTrailingSlash(string value) => new PathString(value.TrimEnd('/'));
-        }
-
         public WebpackContext(IOptions<WebpackOptions> options, IHostingEnvironment env)
         {
             if (options == null)
@@ -96,6 +65,41 @@ namespace Webpack.AspNetCore.Internal
 
                 return uriBuilder.Uri;
             }
+        }
+
+        public IFileInfo GetManifestFileInfo()
+        {
+            return AssetFileProvider.GetFileInfo(ManifestFileName);
+        }
+
+        public StaticFileOptions CreateStaticFileOptions() =>
+            CreateStaticFileOptions(Options.StaticOptions);
+
+        public StaticFileOptions CreateDevServerStaticFileOptions() =>
+            CreateStaticFileOptions(Options.DevServerOptions.StaticOptions);
+
+        private StaticFileOptions CreateStaticFileOptions(StaticOptions sourceOptions)
+        {
+            if (sourceOptions == null)
+            {
+                throw new InvalidOperationException(
+                    $"{nameof(WebpackOptions.StaticOptions)} can not be null"
+                );
+            }
+
+            var options = new StaticFileOptions
+            {
+                FileProvider = AssetFileProvider,
+                ContentTypeProvider = sourceOptions.ContentTypeProvider,
+                DefaultContentType = sourceOptions.DefaultContentType,
+                ServeUnknownFileTypes = sourceOptions.ServeUnknownFileTypes,
+                RequestPath = removeTrailingSlash(sourceOptions.RequestPath),
+                OnPrepareResponse = sourceOptions.OnPrepareResponse
+            };
+
+            return options;
+
+            PathString removeTrailingSlash(string value) => new PathString(value.TrimEnd('/'));
         }
     }
 }
