@@ -8,8 +8,8 @@ namespace WebApp
     /// Startup configuration example with user defined static file options
     /// To use this configuration, webpack static assets have to be built
     /// with public path set to /public/:
-    /// unix:    export PUBLIC_PATH=/public/ && npm run build
-    /// windows: set "PUBLIC_PATH=/public/" && npm run build
+    /// unix:    export PUBLIC_PATH=/public/ && npm run build|start
+    /// windows: set "PUBLIC_PATH=/public/" && npm run build|start
     /// </summary>
     public class StartupWithStaticFileOptions
     {
@@ -26,22 +26,25 @@ namespace WebApp
                             value: "public,max-age=31536000"
                         );
                 });
+
+                options.ConfigureDevServer(opts =>
+                    opts.PublicPath = "/public/"
+                );
             });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsProduction())
+            if (env.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseWebpackStatic();
+                app.UsePathBase("/public/");
+                app.UseDeveloperExceptionPage();
+                app.UseWebpackDevServer();
             }
             else
             {
-                throw new System.NotSupportedException(
-                    $"{env.EnvironmentName} environment is not supported " +
-                    $"for {nameof(StartupWithStaticFileOptions)}"
-                );
+                app.UseExceptionHandler("/Home/Error");
+                app.UseWebpackStatic();
             }
 
             app.UseMvcWithDefaultRoute();

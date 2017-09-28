@@ -43,13 +43,23 @@
       },
       "applicationUrl": "http://127.0.0.1:5000/"
     },
-    "WebApp-WithStaticFileOpts": {
+    "WebApp-WithStaticFileOpts-Prod": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "http://127.0.0.1:5000/",
       "commandLineArgs": "/startup withStaticFileOpts",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
+      },
+      "applicationUrl": "http://127.0.0.1:5000/"
+    },
+    "WebApp-WithStaticFileOpts-Dev": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "http://127.0.0.1:5000/public/",
+      "commandLineArgs": "/startup withStaticFileOpts",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://127.0.0.1:5000/"
     }
