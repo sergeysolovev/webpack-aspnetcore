@@ -9,8 +9,8 @@ namespace WebApp
     /// integration with non-empty path base (public path) for dev server
     /// To use this configuration, webpack dev server has to be started
     /// with public path set to /public/:
-    /// unix:    export PUBLIC_PATH=/public/ && npm run start
-    /// windows: set "PUBLIC_PATH=/public/" && npm run start
+    /// unix:    export PUBLIC_PATH=/public/ && npm run start|build
+    /// windows: set "PUBLIC_PATH=/public/" && npm run start|build
     /// </summary>
     public class StartupWithPathBase
     {
@@ -24,18 +24,17 @@ namespace WebApp
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UsePathBase("/public/");
+
             if (env.IsDevelopment())
             {
-                app.UsePathBase("/public/");
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevServer();
             }
             else
             {
-                throw new System.NotSupportedException(
-                    $"{env.EnvironmentName} environment is not supported " +
-                    $"for {nameof(StartupWithPathBase)}"
-                );
+                app.UseExceptionHandler("/Home/Error");
+                app.UseWebpackStatic();
             }
             
             app.UseMvcWithDefaultRoute();

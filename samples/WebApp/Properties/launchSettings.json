@@ -23,13 +23,23 @@
       },
       "applicationUrl": "http://127.0.0.1:5000/"
     },
-    "WebApp-WithPathBase": {
+    "WebApp-WithPathBase-Dev": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "http://127.0.0.1:5000/public/",
       "commandLineArgs": "/startup withPathBase",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://127.0.0.1:5000/"
+    },
+    "WebApp-WithPathBase-Prod": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "http://127.0.0.1:5000/public/",
+      "commandLineArgs": "/startup withPathBase",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "applicationUrl": "http://127.0.0.1:5000/"
     },
