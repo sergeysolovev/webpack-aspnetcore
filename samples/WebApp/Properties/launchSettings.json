@@ -8,14 +8,14 @@
     }
   },
   "profiles": {
-    "IIS Express": {
+    "WebApp-Prod": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       }
     },
-    "WebApp": {
+    "WebApp-Dev": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
