@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Webpack.AspNetCore.DevServer;
+using Webpack.AspNetCore.DevServer.Internal;
 using Webpack.AspNetCore.Internal;
 using Webpack.AspNetCore.Static;
+using Webpack.AspNetCore.Static.Internal;
 
 namespace Microsoft.AspNetCore.Builder
 {

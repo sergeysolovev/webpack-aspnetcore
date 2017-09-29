@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 
-namespace Webpack.AspNetCore.DevServer
+namespace Webpack.AspNetCore.DevServer.Internal
 {
     /// <summary>
     /// Creates instances of <see cref="HttpClient"/>

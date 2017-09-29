@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Webpack.AspNetCore.DevServer
+namespace Webpack.AspNetCore.DevServer.Internal
 {
     /// <summary>
     /// Implementation of <see cref="IAssetPathRepository"/>

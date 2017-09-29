@@ -5,7 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Webpack.AspNetCore.Internal;
 
-namespace Webpack.AspNetCore.Static
+namespace Webpack.AspNetCore.Static.Internal
 {
     internal class PhysicalFileManifestReader : IManifestReader
     {

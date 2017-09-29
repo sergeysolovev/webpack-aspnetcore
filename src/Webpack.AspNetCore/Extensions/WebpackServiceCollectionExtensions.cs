@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System;
 using Webpack.AspNetCore;
 using Webpack.AspNetCore.DevServer;
+using Webpack.AspNetCore.DevServer.Internal;
 using Webpack.AspNetCore.Internal;
 using Webpack.AspNetCore.Static;
+using Webpack.AspNetCore.Static.Internal;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

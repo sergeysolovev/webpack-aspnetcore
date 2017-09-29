@@ -7,7 +7,7 @@ using Microsoft.Extensions.Primitives;
 using System;
 using System.IO;
 
-namespace Webpack.AspNetCore.Static
+namespace Webpack.AspNetCore.Static.Internal
 {
     internal class StaticContext
     {

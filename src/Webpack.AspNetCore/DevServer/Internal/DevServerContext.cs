@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
 
-namespace Webpack.AspNetCore.DevServer
+namespace Webpack.AspNetCore.DevServer.Internal
 {
     internal class DevServerContext
     {

@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Webpack.AspNetCore.DevServer
+namespace Webpack.AspNetCore.DevServer.Internal
 {
     /// <summary>
     /// A reverse proxy implementation for webpack dev server.

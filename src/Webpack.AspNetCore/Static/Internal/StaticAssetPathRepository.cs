@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace Webpack.AspNetCore.Static
+namespace Webpack.AspNetCore.Static.Internal
 {
     /// <summary>
     /// Implementation of <see cref="IAssetPathRepository"/>

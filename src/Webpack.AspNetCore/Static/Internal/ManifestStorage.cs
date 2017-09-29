@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Webpack.AspNetCore
+namespace Webpack.AspNetCore.Static.Internal
 {
     /// <summary>
     /// Provides thread-safe storage for the asset manifest

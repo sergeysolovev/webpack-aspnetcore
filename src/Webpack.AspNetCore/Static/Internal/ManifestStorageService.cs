@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Webpack.AspNetCore.Static
+namespace Webpack.AspNetCore.Static.Internal
 {
     internal class ManifestStorageService
     {

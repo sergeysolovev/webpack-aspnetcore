@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 
-namespace Webpack.AspNetCore.DevServer
+namespace Webpack.AspNetCore.DevServer.Internal
 {
     /// <summary>
     /// Provides context for <see cref="DevServerBackchannelFactory"/>.
