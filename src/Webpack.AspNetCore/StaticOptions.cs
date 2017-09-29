@@ -12,14 +12,14 @@ namespace Microsoft.AspNetCore.Builder
     {
         public StaticOptions()
         {
-            ManifestPath = new PathString("/dist/asset-manifest.json");
+            ManifestPath = new PathString("/dist/manifest.json");
             UseStaticFileMiddleware = true;
             OnPrepareResponse = _ => { };
         }
 
         /// <summary>
         /// The asset manifest path within the application's web root path
-        /// Default: /asset-manifest.json
+        /// Default: /manifest.json
         /// </summary>
         public PathString ManifestPath { get; set; }
 

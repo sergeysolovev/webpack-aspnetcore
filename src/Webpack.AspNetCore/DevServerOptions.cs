@@ -10,12 +10,12 @@ namespace Microsoft.AspNetCore.Builder
     {
         public DevServerOptions()
         {
-            ManifestPath = new PathString("/asset-manifest.json");
+            ManifestPath = new PathString("/manifest.json");
         }
 
         /// <summary>
         /// The asset manifest path withing the dev server's public path
-        /// Default: /asset-manifest.json
+        /// Default: /manifest.json
         /// </summary>
         public PathString ManifestPath { get; set; }
 

@@ -119,7 +119,7 @@ const config = {
       allChunks: true
     }),
     new ManifestPlugin({
-      fileName: 'asset-manifest.json'
+        fileName: 'manifest.json'
     })
   ]
 };
