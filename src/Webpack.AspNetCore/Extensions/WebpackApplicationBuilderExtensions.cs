@@ -25,7 +25,7 @@ namespace Microsoft.AspNetCore.Builder
             }
             else
             {
-                var staticContext = app.ApplicationServices.GetRequiredService<WebpackStaticContext>();
+                var staticContext = app.ApplicationServices.GetRequiredService<StaticContext>();
                 var options = app.ApplicationServices.GetRequiredService<IOptions<StaticOptions>>().Value;
                 var service = app.ApplicationServices.GetRequiredService<ManifestStorageService>();
 

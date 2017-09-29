@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using System;
 
-namespace Microsoft.AspNetCore.Builder
+namespace Webpack.AspNetCore.Static
 {
     /// <summary>
     /// Represents a limited set of options from <see cref="StaticFileOptions" />

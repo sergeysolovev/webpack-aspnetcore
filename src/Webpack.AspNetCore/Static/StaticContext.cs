@@ -9,14 +9,14 @@ using System.IO;
 
 namespace Webpack.AspNetCore.Static
 {
-    internal class WebpackStaticContext
+    internal class StaticContext
     {
         private readonly string manifestFileName;
         private readonly string manifestPhysicalPath;
         private readonly IFileProvider fileProvider;
         private readonly StaticOptions options;
 
-        public WebpackStaticContext(IOptions<StaticOptions> optionsAccessor, IHostingEnvironment env)
+        public StaticContext(IOptions<StaticOptions> optionsAccessor, IHostingEnvironment env)
         {
             if (optionsAccessor == null)
             {

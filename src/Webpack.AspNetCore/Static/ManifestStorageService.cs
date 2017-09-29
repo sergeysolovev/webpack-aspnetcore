@@ -9,14 +9,14 @@ namespace Webpack.AspNetCore.Static
 {
     internal class ManifestStorageService
     {
-        private readonly WebpackStaticContext context;
+        private readonly StaticContext context;
         private readonly PhysicalFileManifestReader reader;
         private readonly ManifestStorage storage;
         private readonly IHostingEnvironment environment;
         private readonly ILogger<ManifestStorageService> logger;
 
         public ManifestStorageService(
-            WebpackStaticContext context,
+            StaticContext context,
             PhysicalFileManifestReader reader,
             ManifestStorage storage,
             IHostingEnvironment environment,

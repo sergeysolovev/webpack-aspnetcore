@@ -12,13 +12,13 @@ namespace Webpack.AspNetCore.Static
     /// </summary>
     internal class StaticAssetPathRepository : IAssetPathRepository
     {
-        private readonly WebpackStaticContext context;
+        private readonly StaticContext context;
         private readonly ManifestStorage storage;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly ILogger<StaticAssetPathRepository> logger;
 
         public StaticAssetPathRepository(
-            WebpackStaticContext context,
+            StaticContext context,
             ManifestStorage storage,
             IHttpContextAccessor httpContextAccessor,
             ILogger<StaticAssetPathRepository> logger)

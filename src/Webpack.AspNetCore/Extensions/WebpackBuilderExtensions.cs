@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
-using System;
+﻿using System;
+using Webpack.AspNetCore.DevServer;
+using Webpack.AspNetCore.Static;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

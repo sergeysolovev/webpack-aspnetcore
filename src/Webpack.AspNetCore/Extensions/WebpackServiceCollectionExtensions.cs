@@ -40,7 +40,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddSingleton<PhysicalFileManifestReader>();
             services.TryAddSingleton<ManifestStorageService>();
             services.TryAddSingleton<StaticOptions>();
-            services.TryAddSingleton<WebpackStaticContext>();
+            services.TryAddSingleton<StaticContext>();
             services.TryAddScoped<StaticAssetPathRepository>();
 
             return new WebpackBuilder(services);

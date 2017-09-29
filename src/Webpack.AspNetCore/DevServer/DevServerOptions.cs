@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace Microsoft.AspNetCore.Builder
+namespace Webpack.AspNetCore.DevServer
 {
     /// <summary>
     /// Options for webpack dev server
