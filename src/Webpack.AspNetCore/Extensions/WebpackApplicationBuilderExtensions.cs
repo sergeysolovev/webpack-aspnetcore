@@ -20,7 +20,7 @@ namespace Microsoft.AspNetCore.Builder
 
             if (withDevServer)
             {
-                context.Mode = AssetServingMethod.DevServer;
+                context.AssetSource = WebpackAssetSource.DevServer;
                 app.UseMiddleware<DevServerReverseProxyMiddleware>();
             }
             else
@@ -29,7 +29,7 @@ namespace Microsoft.AspNetCore.Builder
                 var options = app.ApplicationServices.GetRequiredService<IOptions<StaticOptions>>().Value;
                 var service = app.ApplicationServices.GetRequiredService<ManifestStorageService>();
 
-                context.Mode = AssetServingMethod.Static;
+                context.AssetSource = WebpackAssetSource.Static;
                 service.Start();
 
                 if (options.UseStaticFileMiddleware)

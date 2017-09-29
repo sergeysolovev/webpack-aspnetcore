@@ -18,7 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<AssetPathMapper>(sp =>
             {
                 var context = sp.GetRequiredService<WebpackContext>();
-                var withDevServer = (context.Mode == AssetServingMethod.DevServer);
+                var withDevServer = (context.AssetSource == WebpackAssetSource.DevServer);
 
                 var repository = withDevServer ?
                     sp.GetRequiredService<DevServerAssetPathRepository>() as IAssetPathRepository :

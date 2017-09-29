@@ -1,9 +1,9 @@
 ﻿namespace Webpack.AspNetCore.Internal
 {
     /// <summary>
-    /// Determines the way to serve the assets and map their paths
+    /// Determines where webpack assets come from
     /// </summary>
-    internal enum AssetServingMethod
+    internal enum WebpackAssetSource
     {
         /// <summary>
         /// Static

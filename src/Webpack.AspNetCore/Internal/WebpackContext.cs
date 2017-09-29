@@ -2,6 +2,6 @@
 {
     internal class WebpackContext
     {
-        public AssetServingMethod Mode { get; set; }
+        public WebpackAssetSource AssetSource { get; set; }
     }
 }
