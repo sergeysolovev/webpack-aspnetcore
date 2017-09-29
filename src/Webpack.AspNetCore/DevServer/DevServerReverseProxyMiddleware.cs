@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Webpack.AspNetCore.Internal;
 
 namespace Webpack.AspNetCore.DevServer
 {
@@ -13,29 +14,38 @@ namespace Webpack.AspNetCore.DevServer
     /// </summary>
     internal class DevServerReverseProxyMiddleware
     {
-        private readonly WebpackContext webpackContext;
         private readonly RequestDelegate next;
         private readonly HttpClient backchannel;
+        private readonly string devServerHost;
 
-        public DevServerReverseProxyMiddleware(DevServerBackchannelFactory backchannelFactory, WebpackContext webpackContext, RequestDelegate next)
+        public DevServerReverseProxyMiddleware(
+            IOptions<DevServerOptions> optionsAccessor,
+            DevServerBackchannelFactory backchannelFactory,
+            RequestDelegate next)
         {
+            if (optionsAccessor == null)
+            {
+                throw new ArgumentNullException(nameof(optionsAccessor));
+            }
+
             if (backchannelFactory == null)
             {
                 throw new ArgumentNullException(nameof(backchannelFactory));
             }
 
-            this.webpackContext = webpackContext ?? throw new ArgumentNullException(nameof(webpackContext));
-            this.next = next ?? throw new ArgumentNullException(nameof(next));
+            var options = optionsAccessor.Value;
 
-            backchannel = createBackchannel();
+            this.next = next ?? throw new ArgumentNullException(nameof(next));
+            this.devServerHost = $"{options.Host}:{options.Port}";
+            this.backchannel = createBackchannel();
 
             HttpClient createBackchannel()
             {
                 var baseAddress = new UriBuilder
                 {
-                    Host = webpackContext.Options.DevServerOptions.Host,
-                    Port = webpackContext.Options.DevServerOptions.Port,
-                    Scheme = webpackContext.Options.DevServerOptions.Scheme
+                    Host = options.Host,
+                    Port = options.Port,
+                    Scheme = options.Scheme
                 };
 
                 return backchannelFactory.Create(baseAddress.Uri);
@@ -96,10 +106,11 @@ namespace Webpack.AspNetCore.DevServer
                     proxyRequest.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
                 }
 
-                proxyRequest.Headers.Host = webpackContext.DevServerHost;
+                proxyRequest.Headers.Host = devServerHost;
 
                 return proxyRequest;
             }
         }
     }
 }
+

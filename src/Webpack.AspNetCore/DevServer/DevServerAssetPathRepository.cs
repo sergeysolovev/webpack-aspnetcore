@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Webpack.AspNetCore.Internal;
 
 namespace Webpack.AspNetCore.DevServer
 {
@@ -14,20 +15,20 @@ namespace Webpack.AspNetCore.DevServer
     /// </summary>
     internal class DevServerAssetPathRepository : IAssetPathRepository
     {
-        private readonly WebpackContext context;
+        private readonly DevServerOptions options;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly DevServerManifestReader manifestReader;
         private readonly ILogger<DevServerAssetPathRepository> logger;
         private IDictionary<string, string> cachedManifest;
 
         public DevServerAssetPathRepository(
-            WebpackContext context,
+            IOptions<DevServerOptions> optionsAccessor,
             DevServerManifestReader manifestReader,
             IHttpContextAccessor httpContextAccessor,
             ILogger<DevServerAssetPathRepository> logger)
         {
-            this.context = context ??
-                throw new ArgumentNullException(nameof(context));
+            this.options = optionsAccessor?.Value ??
+                throw new ArgumentNullException(nameof(optionsAccessor));
 
             this.manifestReader = manifestReader ??
                 throw new ArgumentNullException(nameof(manifestReader));
@@ -48,25 +49,24 @@ namespace Webpack.AspNetCore.DevServer
                 if (manifest.TryGetValue(assetKey, out var assetUrl) ||
                     manifest.TryGetValue(withForwardSlash(), out assetUrl))
                 {
-                    var options = context.Options;
                     var assetRelativePath = makePath(assetUrl);
-                    var publicPath = makePath(httpContextAccessor.HttpContext.Request.PathBase);
-                    var devServerPublicPath = makePath(context.Options.DevServerOptions.PublicPath);
+                    var webAppPublicPath = makePath(httpContextAccessor.HttpContext.Request.PathBase);
+                    var devServerPublicPath = makePath(options.PublicPath);
 
-                    if (publicPath != devServerPublicPath)
+                    if (webAppPublicPath != devServerPublicPath)
                     {
                         throw new WebpackDevServerException(
-                            $"The request's path base '{publicPath}' is different from " +
+                            $"The request's path base '{webAppPublicPath}' is different from " +
                             $"webpack dev server public path '{devServerPublicPath}'. " +
                             "They must have the same value"
                         );
                     }
 
-                    var assetPath = publicPath.Add(assetRelativePath).Value;
+                    var assetPath = webAppPublicPath.Add(assetRelativePath).Value;
 
                     logger.LogDebug(
                         $"Mapped webpack asset key '{assetKey}' to the path '{assetPath}'. " +
-                        $"Public path: '{publicPath}'."
+                        $"Public path: '{webAppPublicPath}'."
                     );
 
                     return assetPath;

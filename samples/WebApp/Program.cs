@@ -22,7 +22,7 @@ namespace WebApp
                 .Build();
 
             System.Type getStartupType() =>
-                startUpArg == "withPathBase" ? typeof(StartupWithPathBase) :
+                startUpArg == "withPublicPath" ? typeof(StartupWithPublicPath) :
                 startUpArg == "withStaticFileOpts" ? typeof(StartupWithStaticFileOptions) :
                 typeof(Startup);
         }

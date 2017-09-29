@@ -10,8 +10,14 @@ namespace Microsoft.AspNetCore.Builder
     {
         public DevServerOptions()
         {
-            StaticOptions = new StaticOptions();
+            ManifestPath = new PathString("/asset-manifest.json");
         }
+
+        /// <summary>
+        /// The asset manifest path withing the dev server's public path
+        /// Default: /asset-manifest.json
+        /// </summary>
+        public PathString ManifestPath { get; set; }
 
         /// <summary>
         /// Host. Default: 127.0.0.1
@@ -36,24 +42,5 @@ namespace Microsoft.AspNetCore.Builder
         /// Public path
         /// </summary>
         public PathString PublicPath { get; set; }
-
-        /// <summary>
-        /// Configures static asset options for dev server
-        /// </summary>
-        /// <param name="setupAction"></param>
-        public void ConfigureStatic(Action<StaticOptions> setupAction)
-        {
-            if (setupAction == null)
-            {
-                throw new ArgumentNullException(nameof(setupAction));
-            }
-
-            setupAction.Invoke(StaticOptions);
-        }
-
-        /// <summary>
-        /// Static options for dev server
-        /// </summary>
-        internal StaticOptions StaticOptions { get; set; }
     }
 }

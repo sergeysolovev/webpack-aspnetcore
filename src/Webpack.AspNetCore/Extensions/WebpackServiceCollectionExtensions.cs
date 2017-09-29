@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using Webpack.AspNetCore;
@@ -10,16 +11,14 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class WebpackServiceCollectionExtensions
     {
-        public static IServiceCollection AddWebpack(this IServiceCollection services, Action<WebpackOptions> setupAction = null)
+        public static IWebpackBuilder AddWebpack(this IServiceCollection services)
         {
-            createAndConfigureOptions(out WebpackOptions options);
-
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.TryAddSingleton<WebpackContext>();
             services.TryAddScoped<AssetPathMapper>(sp =>
             {
                 var context = sp.GetRequiredService<WebpackContext>();
-                var withDevServer = (context.Method == AssetServingMethod.DevServer);
+                var withDevServer = (context.Mode == AssetServingMethod.DevServer);
 
                 var repository = withDevServer ?
                     sp.GetRequiredService<DevServerAssetPathRepository>() as IAssetPathRepository :
@@ -32,23 +31,18 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddTransient<DevServerBackchannelFactory>();
             services.TryAddSingleton<DevServerBackchannelFactoryContext>();
             services.TryAddSingleton<DevServerManifestReader>();
+            services.TryAddSingleton<DevServerOptions>();
             services.TryAddScoped<DevServerAssetPathRepository>();
             
             // static services
             services.TryAddSingleton<ManifestStorage>();
             services.TryAddSingleton<PhysicalFileManifestReader>();
             services.TryAddSingleton<ManifestStorageService>();
+            services.TryAddSingleton<StaticOptions>();
+            services.TryAddSingleton<WebpackStaticContext>();
             services.TryAddScoped<StaticAssetPathRepository>();
 
-            return services;
-
-            void createAndConfigureOptions(out WebpackOptions webpackOptions)
-            {
-                webpackOptions = new WebpackOptions();
-
-                setupAction?.Invoke(options);
-                services.AddSingleton(Options.Options.Create(options));
-            }
+            return new WebpackBuilder(services);
         }
     }
 }

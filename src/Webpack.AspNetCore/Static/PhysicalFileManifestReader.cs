@@ -9,11 +9,11 @@ namespace Webpack.AspNetCore.Static
 {
     internal class PhysicalFileManifestReader : IManifestReader
     {
-        private readonly WebpackContext context;
+        private readonly WebpackStaticContext context;
 
-        public PhysicalFileManifestReader(WebpackContext context)
+        public PhysicalFileManifestReader(WebpackStaticContext context)
         {
-            this.context = context ?? throw new System.ArgumentNullException(nameof(context));
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         /// <summary>

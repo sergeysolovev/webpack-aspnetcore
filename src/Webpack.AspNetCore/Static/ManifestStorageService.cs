@@ -1,29 +1,41 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Webpack.AspNetCore.Internal;
 
 namespace Webpack.AspNetCore.Static
 {
     internal class ManifestStorageService
     {
-        private readonly WebpackContext context;
+        private readonly WebpackStaticContext context;
         private readonly PhysicalFileManifestReader reader;
         private readonly ManifestStorage storage;
+        private readonly IHostingEnvironment environment;
         private readonly ILogger<ManifestStorageService> logger;
 
         public ManifestStorageService(
-            WebpackContext context,
+            WebpackStaticContext context,
             PhysicalFileManifestReader reader,
             ManifestStorage storage,
+            IHostingEnvironment environment,
             ILogger<ManifestStorageService> logger)
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
-            this.reader = reader ?? throw new ArgumentNullException(nameof(reader));
-            this.storage = storage ?? throw new ArgumentNullException(nameof(storage));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.context = context ??
+                throw new ArgumentNullException(nameof(context));
+
+            this.reader = reader ??
+                throw new ArgumentNullException(nameof(reader));
+
+            this.storage = storage ??
+                throw new ArgumentNullException(nameof(storage));
+
+            this.environment = environment ??
+                throw new ArgumentNullException(nameof(environment));
+
+            this.logger = logger ??
+                throw new ArgumentNullException(nameof(logger));
         }
 
         public void Start()
@@ -52,7 +64,7 @@ namespace Webpack.AspNetCore.Static
                 if (manifest == null)
                 {
                     var message = "Failed to retrieve webpack asset manifest. " +
-                        $"File path: '{context.GetManifestFileInfo().PhysicalPath}'. " +
+                        $"File path: '{context.ManifestPhysicalPath}'. " +
                         "Check out the file exists and it's a valid json asset manifest";
 
                     logger.LogError(message);
@@ -98,8 +110,7 @@ namespace Webpack.AspNetCore.Static
             {
                 // Use IFileProvider.Watch to monitor
                 // the asset manifest file changes
-
-                var token = context.AssetFileProvider.Watch(context.ManifestFileName);
+                var token = context.WatchManifestFile();
                 var taskCompletionSource = new TaskCompletionSource<object>();
 
                 token.RegisterChangeCallback(
@@ -111,7 +122,7 @@ namespace Webpack.AspNetCore.Static
 
                 logger.LogDebug(
                     $"The contents of webpack asset manifest have been changed. " +
-                    $"File path: '{context.GetManifestFileInfo().PhysicalPath}'."
+                    $"File path: '{context.ManifestPhysicalPath}'."
                 );
             }
 

@@ -1,8 +1,6 @@
-using System;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.FileProviders;
+using System;
 
 namespace Microsoft.AspNetCore.Builder
 {
@@ -14,8 +12,23 @@ namespace Microsoft.AspNetCore.Builder
     {
         public StaticOptions()
         {
+            ManifestPath = new PathString("/asset-manifest.json");
+            UseStaticFileMiddleware = true;
             OnPrepareResponse = _ => { };
         }
+
+        /// <summary>
+        /// The asset manifest path within the application's web root path
+        /// Default: /asset-manifest.json
+        /// </summary>
+        public PathString ManifestPath { get; set; }
+
+        /// <summary>
+        /// Determines whether to use <see cref="Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware"/>
+        /// to serve static assets from the root of <see cref="ManifestPath"/>.
+        /// Default: <c>true</c>
+        /// </summary>
+        public bool UseStaticFileMiddleware { get; set; }
 
         /// <summary>
         /// The relative request path that maps to static resources.

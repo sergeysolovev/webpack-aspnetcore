@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -23,20 +25,39 @@ namespace Webpack.AspNetCore.DevServer
         }
 
         private readonly HttpClient backchannel;
-        private readonly WebpackContext context;
+        private readonly DevServerOptions options;
         private CachedManifest cachedManifest;
 
-        public DevServerManifestReader(DevServerBackchannelFactory backchannelFactory, WebpackContext context)
+        public DevServerManifestReader(IOptions<DevServerOptions> optionsAccessor, DevServerBackchannelFactory backchannelFactory)
         {
+            if (optionsAccessor == null)
+            {
+                throw new ArgumentNullException(nameof(optionsAccessor));
+            }
+
             if (backchannelFactory == null)
             {
                 throw new ArgumentNullException(nameof(backchannelFactory));
             }
 
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
+            this.options = optionsAccessor.Value;
+            this.backchannel = createBackchannel();
 
-            backchannel = backchannelFactory.Create(context.DevServerManifestUri);
-            backchannel.DefaultRequestHeaders.Add("Connection", "keep-alive");
+            HttpClient createBackchannel()
+            {
+                var baseAddress = new UriBuilder
+                {
+                    Host = options.Host,
+                    Port = options.Port,
+                    Scheme = options.Scheme,
+                    Path = options.PublicPath.Add(options.ManifestPath)
+                };
+
+                var backchannel = backchannelFactory.Create(baseAddress.Uri);
+                backchannel.DefaultRequestHeaders.Add("Connection", "keep-alive");
+
+                return backchannel;
+            }
         }
 
         public async ValueTask<IDictionary<string, string>> ReadAsync()
@@ -64,7 +85,7 @@ namespace Webpack.AspNetCore.DevServer
                 throw new WebpackDevServerException(
                     "Failed to retrieve the asset manifest from webpack dev server. " +
                     "Check out that the dev server is up and running " +
-                    $"and a valid asset manifest is available on '{context.DevServerManifestUri}'",
+                    $"and a valid asset manifest is available on '{backchannel.BaseAddress}'",
                     innerException: ex
                 );
             }

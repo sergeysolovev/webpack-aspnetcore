@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Webpack.AspNetCore;
 using Webpack.AspNetCore.DevServer;
 using Webpack.AspNetCore.Internal;
 using Webpack.AspNetCore.Static;
@@ -17,39 +16,29 @@ namespace Microsoft.AspNetCore.Builder
 
         private static IApplicationBuilder UseWebpack(IApplicationBuilder app, bool withDevServer)
         {
+            var context = app.ApplicationServices.GetRequiredService<WebpackContext>();
+
             if (withDevServer)
             {
-                app.ApplicationServices
-                    .GetRequiredService<IOptions<WebpackOptions>>()
-                    .Value
-                    .AssetServingMethod = AssetServingMethod.DevServer;
-
+                context.Mode = AssetServingMethod.DevServer;
                 app.UseMiddleware<DevServerReverseProxyMiddleware>();
-
-                var context = getContext();
-                if (context.Options.UseStaticFileMiddleware)
-                {
-                    app.UseStaticFiles(context.CreateDevServerStaticFileOptions());
-                }
             }
             else
             {
-                app.ApplicationServices
-                    .GetRequiredService<ManifestStorageService>()
-                    .Start();
+                var staticContext = app.ApplicationServices.GetRequiredService<WebpackStaticContext>();
+                var options = app.ApplicationServices.GetRequiredService<IOptions<StaticOptions>>().Value;
+                var service = app.ApplicationServices.GetRequiredService<ManifestStorageService>();
 
-                var context = getContext();
-                if (context.Options.UseStaticFileMiddleware)
+                context.Mode = AssetServingMethod.Static;
+                service.Start();
+
+                if (options.UseStaticFileMiddleware)
                 {
-                    app.UseStaticFiles(context.CreateStaticFileOptions());
+                    app.UseStaticFiles(staticContext.GetStaticFileOptions());
                 }
             }
 
             return app;
-
-            WebpackContext getContext() => app
-                .ApplicationServices
-                .GetRequiredService<WebpackContext>();
         }
     }
 }

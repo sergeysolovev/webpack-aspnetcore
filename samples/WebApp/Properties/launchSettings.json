@@ -16,6 +16,14 @@
       },
       "applicationUrl": "http://127.0.0.1:5000/"
     },
+    "default-prod": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      },
+      "applicationUrl": "http://127.0.0.1:5000/"
+    },
     "default-iisExpr": {
       "commandName": "IISExpress",
       "launchBrowser": true,
@@ -23,45 +31,42 @@
         "ASPNETCORE_ENVIRONMENT": "Production"
       }
     },
-    "withPathBase": {
+    "withPublicPath": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://127.0.0.1:5000/public/",
-      "commandLineArgs": "/startup withPathBase",
+      "launchUrl": "http://127.0.0.1:5000/public",
+      "commandLineArgs": "/startup withPublicPath",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://127.0.0.1:5000/"
     },
-    "withPathBase-iisExpr": {
+    "withPublicPath-prod": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://127.0.0.1:5000/public/",
-      "commandLineArgs": "/startup withPathBase",
+      "launchUrl": "http://127.0.0.1:5000/public",
+      "commandLineArgs": "/startup withPublicPath",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "applicationUrl": "http://127.0.0.1:5000/"
     },
-    "withStaticFileOpts": {
+    "withStaticFileOpts-prod": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://127.0.0.1:5000/public/",
       "commandLineArgs": "/startup withStaticFileOpts",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "applicationUrl": "http://127.0.0.1:5000/"
     },
     "withStaticFileOpts-iisExpr": {
-      "commandName": "Project",
+      "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "http://127.0.0.1:5000/",
       "commandLineArgs": "/startup withStaticFileOpts",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
-      },
-      "applicationUrl": "http://127.0.0.1:5000/"
+      }
     }
   }
 }

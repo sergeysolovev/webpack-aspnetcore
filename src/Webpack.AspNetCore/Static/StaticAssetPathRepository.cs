@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 using Webpack.AspNetCore.Internal;
@@ -13,19 +15,19 @@ namespace Webpack.AspNetCore.Static
     /// </summary>
     internal class StaticAssetPathRepository : IAssetPathRepository
     {
-        private readonly WebpackContext context;
+        private readonly StaticOptions options;
         private readonly ManifestStorage storage;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly ILogger<StaticAssetPathRepository> logger;
 
         public StaticAssetPathRepository(
-            WebpackContext context,
+            IOptions<StaticOptions> optionsAccessor,
             ManifestStorage storage,
             IHttpContextAccessor httpContextAccessor,
             ILogger<StaticAssetPathRepository> logger)
         {
-            this.context = context ??
-                throw new ArgumentNullException(nameof(context));
+            this.options = optionsAccessor?.Value ??
+                throw new ArgumentNullException(nameof(optionsAccessor));
 
             this.storage = storage ??
                 throw new ArgumentNullException(nameof(storage));
@@ -51,10 +53,9 @@ namespace Webpack.AspNetCore.Static
                 return new ValueTask<string>(result: null);
             }
 
-            var options = context.Options;
             var pathBase = makePath(httpContextAccessor.HttpContext.Request.PathBase);
             var assetRelativePath = makePath(assetUrl);
-            var publicPath = pathBase.Add(context.StaticRequestPath);
+            var publicPath = pathBase.Add(options.RequestPath);
             var assetPath = publicPath.Add(assetRelativePath).Value;
 
             logger.LogDebug(

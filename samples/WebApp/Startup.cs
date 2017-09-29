@@ -25,7 +25,8 @@ namespace WebApp
                 app.UseWebpackStatic();
             }
 
-            app.UseMvcWithDefaultRoute();
+            app.UseStaticFiles();
+            app.UseMvc();
         }
     }
 }
