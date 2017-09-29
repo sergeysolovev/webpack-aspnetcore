@@ -32,6 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddSingleton<DevServerBackchannelFactoryContext>();
             services.TryAddSingleton<DevServerManifestReader>();
             services.TryAddSingleton<DevServerOptions>();
+            services.TryAddSingleton<DevServerContext>();
             services.TryAddScoped<DevServerAssetPathRepository>();
             
             // static services

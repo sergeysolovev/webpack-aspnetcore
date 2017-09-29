@@ -25,14 +25,13 @@ namespace Webpack.AspNetCore.DevServer
         }
 
         private readonly HttpClient backchannel;
-        private readonly DevServerOptions options;
         private CachedManifest cachedManifest;
 
-        public DevServerManifestReader(IOptions<DevServerOptions> optionsAccessor, DevServerBackchannelFactory backchannelFactory)
+        public DevServerManifestReader(DevServerContext context, DevServerBackchannelFactory backchannelFactory)
         {
-            if (optionsAccessor == null)
+            if (context == null)
             {
-                throw new ArgumentNullException(nameof(optionsAccessor));
+                throw new ArgumentNullException(nameof(context));
             }
 
             if (backchannelFactory == null)
@@ -40,24 +39,8 @@ namespace Webpack.AspNetCore.DevServer
                 throw new ArgumentNullException(nameof(backchannelFactory));
             }
 
-            this.options = optionsAccessor.Value;
-            this.backchannel = createBackchannel();
-
-            HttpClient createBackchannel()
-            {
-                var baseAddress = new UriBuilder
-                {
-                    Host = options.Host,
-                    Port = options.Port,
-                    Scheme = options.Scheme,
-                    Path = options.PublicPath.Add('/' + options.ManifestFileName)
-                };
-
-                var backchannel = backchannelFactory.Create(baseAddress.Uri);
-                backchannel.DefaultRequestHeaders.Add("Connection", "keep-alive");
-
-                return backchannel;
-            }
+            backchannel = backchannelFactory.Create(context.ManifestUri);
+            backchannel.DefaultRequestHeaders.Add("Connection", "keep-alive");
         }
 
         public async ValueTask<IDictionary<string, string>> ReadAsync()

@@ -15,20 +15,20 @@ namespace Webpack.AspNetCore.DevServer
     /// </summary>
     internal class DevServerAssetPathRepository : IAssetPathRepository
     {
-        private readonly DevServerOptions options;
+        private readonly DevServerContext context;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly DevServerManifestReader manifestReader;
         private readonly ILogger<DevServerAssetPathRepository> logger;
         private IDictionary<string, string> cachedManifest;
 
         public DevServerAssetPathRepository(
-            IOptions<DevServerOptions> optionsAccessor,
+            DevServerContext context,
             DevServerManifestReader manifestReader,
             IHttpContextAccessor httpContextAccessor,
             ILogger<DevServerAssetPathRepository> logger)
         {
-            this.options = optionsAccessor?.Value ??
-                throw new ArgumentNullException(nameof(optionsAccessor));
+            this.context = context ??
+                throw new ArgumentNullException(nameof(context));
 
             this.manifestReader = manifestReader ??
                 throw new ArgumentNullException(nameof(manifestReader));
@@ -51,7 +51,7 @@ namespace Webpack.AspNetCore.DevServer
                 {
                     var assetRelativePath = makePath(assetUrl);
                     var webAppPublicPath = makePath(httpContextAccessor.HttpContext.Request.PathBase);
-                    var devServerPublicPath = makePath(options.PublicPath);
+                    var devServerPublicPath = makePath(context.Options.PublicPath);
 
                     if (webAppPublicPath != devServerPublicPath)
                     {

@@ -19,13 +19,13 @@ namespace Webpack.AspNetCore.DevServer
         private readonly string devServerHost;
 
         public DevServerReverseProxyMiddleware(
-            IOptions<DevServerOptions> optionsAccessor,
+            DevServerContext context,
             DevServerBackchannelFactory backchannelFactory,
             RequestDelegate next)
         {
-            if (optionsAccessor == null)
+            if (context == null)
             {
-                throw new ArgumentNullException(nameof(optionsAccessor));
+                throw new ArgumentNullException(nameof(context));
             }
 
             if (backchannelFactory == null)
@@ -33,23 +33,9 @@ namespace Webpack.AspNetCore.DevServer
                 throw new ArgumentNullException(nameof(backchannelFactory));
             }
 
-            var options = optionsAccessor.Value;
-
             this.next = next ?? throw new ArgumentNullException(nameof(next));
-            this.devServerHost = $"{options.Host}:{options.Port}";
-            this.backchannel = createBackchannel();
-
-            HttpClient createBackchannel()
-            {
-                var baseAddress = new UriBuilder
-                {
-                    Host = options.Host,
-                    Port = options.Port,
-                    Scheme = options.Scheme
-                };
-
-                return backchannelFactory.Create(baseAddress.Uri);
-            }
+            this.devServerHost = context.DevServerHost;
+            this.backchannel = backchannelFactory.Create(context.DevServerUri);
         }
 
         public async Task Invoke(HttpContext context, DevServerAssetPathRepository repository)
