@@ -7,7 +7,7 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const publicPath = process.env.PUBLIC_PATH || '/';
-const publicDir = 'wwwroot';
+const publicDir = 'wwwroot/dist';
 const outputDir = path.resolve(__dirname, publicDir);
 
 const config = {
@@ -100,9 +100,7 @@ const config = {
         'process.env.PUBLIC_PATH': JSON.stringify(publicPath)
       }
     }),
-    new CleanWebpackPlugin(['static', 'asset-manifest.json'], {
-      root: outputDir
-    }),
+    new CleanWebpackPlugin([outputDir]),
     new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
      async: 'vendor',
@@ -125,7 +123,7 @@ const config = {
       allChunks: true
     }),
     new ManifestPlugin({
-      fileName: 'asset-manifest.json'
+        fileName: 'asset-manifest.json'
     })
   ]
 };
