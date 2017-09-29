@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\favicon.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\Webpack.AspNetCore\Webpack.AspNetCore.csproj" />
   </ItemGroup>
 
