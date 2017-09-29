@@ -50,7 +50,7 @@ namespace Webpack.AspNetCore.DevServer
                     Host = options.Host,
                     Port = options.Port,
                     Scheme = options.Scheme,
-                    Path = options.PublicPath.Add(options.ManifestPath)
+                    Path = options.PublicPath.Add('/' + options.ManifestFileName)
                 };
 
                 var backchannel = backchannelFactory.Create(baseAddress.Uri);

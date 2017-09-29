@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Http;
-using System;
 
 namespace Microsoft.AspNetCore.Builder
 {
@@ -10,14 +9,19 @@ namespace Microsoft.AspNetCore.Builder
     {
         public DevServerOptions()
         {
-            ManifestPath = new PathString("/manifest.json");
+            ManifestFileName = "manifest.json";
         }
 
         /// <summary>
-        /// The asset manifest path withing the dev server's public path
-        /// Default: /manifest.json
+        /// The asset manifest file name
+        /// Default: manifest.json
         /// </summary>
-        public PathString ManifestPath { get; set; }
+        public string ManifestFileName { get; set; }
+
+        /// <summary>
+        /// Public path
+        /// </summary>
+        public PathString PublicPath { get; set; }
 
         /// <summary>
         /// Host. Default: 127.0.0.1
@@ -37,10 +41,5 @@ namespace Microsoft.AspNetCore.Builder
         /// Scheme. Default: http
         /// </summary>
         public string Scheme { get; set; } = "http";
-
-        /// <summary>
-        /// Public path
-        /// </summary>
-        public PathString PublicPath { get; set; }
     }
 }
