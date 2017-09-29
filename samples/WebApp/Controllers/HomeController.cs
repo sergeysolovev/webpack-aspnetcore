@@ -8,13 +8,17 @@ using WebApp.Models;
 
 namespace WebApp.Controllers
 {
+    [Route("Home")]
     public class HomeController : Controller
     {
+        [Route("Index")]
+        [Route("/")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Route("About")]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -22,6 +26,7 @@ namespace WebApp.Controllers
             return View();
         }
 
+        [Route("Contact")]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
