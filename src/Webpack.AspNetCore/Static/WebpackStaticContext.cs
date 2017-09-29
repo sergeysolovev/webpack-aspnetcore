@@ -51,6 +51,8 @@ namespace Webpack.AspNetCore.Static
 
         public string ManifestPhysicalPath => manifestPhysicalPath;
 
+        public StaticOptions Options => options;
+
         public StaticFileOptions GetStaticFileOptions()
         {
             var staticFileOptions = new StaticFileOptions
