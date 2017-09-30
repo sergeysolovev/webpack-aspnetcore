@@ -19,7 +19,7 @@ namespace Webpack.AspNetCore.Static
 
         /// <summary>
         /// The asset manifest path within the application's web root path
-        /// Default: /manifest.json
+        /// Default: /dist/manifest.json
         /// </summary>
         public PathString ManifestPath { get; set; }
 
