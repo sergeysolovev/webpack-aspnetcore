@@ -13,7 +13,7 @@ namespace Webpack.AspNetCore.Static
         public StaticOptions()
         {
             ManifestFileName = "manifest.json";
-            PublicPath = new PathString("/dist/");
+            ManifestDirectoryPath = new PathString("/dist/");
             UseStaticFileMiddleware = true;
             OnPrepareResponse = _ => { };
         }
@@ -25,10 +25,10 @@ namespace Webpack.AspNetCore.Static
         public string ManifestFileName { get; set; }
 
         /// <summary>
-        /// The asset manifest root path within the application's web root path
+        /// The asset manifest directory path within the application's web root path
         /// Default: /dist/
         /// </summary>
-        public PathString PublicPath { get; set; }
+        public PathString ManifestDirectoryPath { get; set; }
 
         ///// <summary>
         ///// The asset manifest path within the application's web root path

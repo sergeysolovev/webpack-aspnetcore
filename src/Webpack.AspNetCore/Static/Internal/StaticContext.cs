@@ -28,7 +28,7 @@ namespace Webpack.AspNetCore.Static.Internal
             }
 
             var options = optionsAccessor.Value;
-            var manifestRootRelativePath = options.PublicPath
+            var manifestRootRelativePath = options.ManifestDirectoryPath
                 .Value
                 .TrimStart('/')
                 .Replace('/', Path.DirectorySeparatorChar);
