@@ -17,7 +17,7 @@ Use [.NET Core 2.0 SDK](https://www.microsoft.com/net/download/core) to build th
 Use NuGet Package Manager for Visual Studio to find and install the package "Webpack.AspNetCore" or use dotnet CLI
 
 ```shell
-dotnet add YourWebApp.csproj package Webpack.AspNetCore
+dotnet add package Webpack.AspNetCore
 ```
 
 ## Quick Start
