@@ -12,16 +12,29 @@ namespace Webpack.AspNetCore.Static
     {
         public StaticOptions()
         {
-            ManifestPath = new PathString("/dist/manifest.json");
+            ManifestFileName = "manifest.json";
+            PublicPath = new PathString("/dist/");
             UseStaticFileMiddleware = true;
             OnPrepareResponse = _ => { };
         }
 
         /// <summary>
-        /// The asset manifest path within the application's web root path
-        /// Default: /dist/manifest.json
+        /// The asset manifest file name
+        /// Default: manifest.json
         /// </summary>
-        public PathString ManifestPath { get; set; }
+        public string ManifestFileName { get; set; }
+
+        /// <summary>
+        /// The asset manifest root path within the application's web root path
+        /// Default: /dist/
+        /// </summary>
+        public PathString PublicPath { get; set; }
+
+        ///// <summary>
+        ///// The asset manifest path within the application's web root path
+        ///// Default: /dist/manifest.json
+        ///// </summary>
+        //public PathString ManifestPath { get; set; }
 
         /// <summary>
         /// Determines whether to use <see cref="Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware"/>

@@ -11,7 +11,6 @@ namespace Webpack.AspNetCore.Static.Internal
 {
     internal class StaticContext
     {
-        private readonly string manifestFileName;
         private readonly string manifestPhysicalPath;
         private readonly IFileProvider fileProvider;
         private readonly StaticOptions options;
@@ -29,25 +28,22 @@ namespace Webpack.AspNetCore.Static.Internal
             }
 
             var options = optionsAccessor.Value;
-            var manifestPath = options.ManifestPath.Value;
-            var manifestFileName = manifestPath.Substring(manifestPath.LastIndexOf('/') + 1);
-            var manifestRootRelativePath = manifestPath
-                .Substring(0, manifestPath.LastIndexOf('/'))
+            var manifestRootRelativePath = options.PublicPath
+                .Value
                 .TrimStart('/')
                 .Replace('/', Path.DirectorySeparatorChar);
             var manifestRootPath = Path.Combine(env.WebRootPath, manifestRootRelativePath);
-            var manifestPhysicalPath = Path.Combine(manifestRootPath, manifestFileName);
+            var manifestPhysicalPath = Path.Combine(manifestRootPath, options.ManifestFileName);
             var fileProvider = new PhysicalFileProvider(manifestRootPath);
 
-            this.manifestFileName = manifestFileName;
             this.manifestPhysicalPath = manifestPhysicalPath;
             this.fileProvider = fileProvider;
             this.options = options;
         }
 
-        public IFileInfo GetManifestFileInfo() => fileProvider.GetFileInfo(manifestFileName);
+        public IFileInfo GetManifestFileInfo() => fileProvider.GetFileInfo(options.ManifestFileName);
 
-        public IChangeToken WatchManifestFile() => fileProvider.Watch(manifestFileName);
+        public IChangeToken WatchManifestFile() => fileProvider.Watch(options.ManifestFileName);
 
         public string ManifestPhysicalPath => manifestPhysicalPath;
 
