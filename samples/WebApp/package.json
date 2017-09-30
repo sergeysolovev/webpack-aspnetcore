@@ -5,8 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cross-env NODE_ENV=development webpack-dev-server --env=dev --progress --profile --colors",
-    "build": "cross-env NODE_ENV=production webpack --env=prod --profile --colors --progress"
+    "start:wds": "cross-env NODE_ENV=development webpack-dev-server --env=dev --progress --profile --colors",
+    "start:wds:withPublicPath": "cross-env PUBLIC_PATH=/public/ npm run start:wds",
+    "start:dotnet": "dotnet run --launch-profile default",
+    "start:dotnet:prod": "dotnet run --launch-profile default:prod",
+    "start:dotnet:withPublicPath": "dotnet run --launch-profile withPublicPath --startup withPublicPath",
+    "start:dotnet:withPublicPath:prod": "dotnet run --launch-profile withPublicPath:prod --startup withPublicPath",
+    "start:dotnet:withStaticFileOpts:prod": "dotnet run --launch-profile withStaticFileOpts:prod --startup withStaticFileOpts",
+    "build:assets": "cross-env NODE_ENV=production webpack --env=prod --profile --colors --progress",
+    "build:assets:withPublicPath": "cross-env PUBLIC_PATH=/public/assets/ npm run build:assets"
   },
   "author": "Sergey Solovev",
   "license": "MIT",

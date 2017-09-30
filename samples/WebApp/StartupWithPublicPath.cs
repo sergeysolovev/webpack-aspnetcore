@@ -8,15 +8,15 @@ namespace WebApp
     /// Startup configuration example, showing how webpack-aspnetcore
     /// works with non-empty public path for static and dev server assets
     /// To use this configuration, webpack's output.publicPath
-    /// has to be set.
-    /// 
+    /// has to be properly set.
+    ///
     /// dev server:
-    /// unix:    export PUBLIC_PATH=/public/ && npm run start
-    /// windows: set "PUBLIC_PATH=/public/" && npm run start
-    /// 
+    /// npm run start:wds:withPublicPath
+    /// npm run start:dotnet:withPublicPath
+    ///
     /// static:
-    /// unix:    export PUBLIC_PATH=/public/assets/ && npm run build
-    /// windows: set "PUBLIC_PATH=/public/assets/" && npm run build
+    /// npm run build:assets:withPublicPath
+    /// npm run start:dotnet:withPublicPath:prod
     /// </summary>
     public class StartupWithPublicPath
     {

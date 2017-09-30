@@ -19,56 +19,55 @@ Install [.NET Core 2.0 SDK](https://www.microsoft.com/net/download/core) to buil
 npm install
 ```
 
-## Working with webpack assets
-
-To build webpack assets
-
-```shell
-npm run build
-
-# with non-empty public path (unix)
-export PUBLIC_PATH=/public/path/ && npm run build
-
-# with non-empty public path (windows)
-set "PUBLIC_PATH=/public/path/" & npm run build
-```
-
-To start the dev server
-
-```shell
-npm run start
-
-# with non-empty public path (unix)
-export PUBLIC_PATH=/public/path/ && npm run start
-
-# with non-empty public path (windows)
-set "PUBLIC_PATH=/public/path/" & npm run start
-```
-
-## Launch profiles
+## Builing and running the app
 
 The app comes with a few startup configurations and [launch profiles](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/Properties/launchSettings.json)
 
-| Profile | Startup class | Environment | Remarks |
-|----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|---------------------|----------------------|
-| default | [Startup](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/Startup.cs) | Development |  |
-| default-prod | [Startup](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/Startup.cs) | Production |  |
-| default-iisexpr | [Startup](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/Startup.cs) | Production | IIS Express only |
-| withPublicPath | [StartupWithPublicPath](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/StartupWithPublicPath.cs) | Development | set PUBLIC_PATH=/public/ |
-| withPublicPath-prod | [StartupWithPublicPath](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/StartupWithPublicPath.cs) | Production | set PUBLIC_PATH=/public/assets/ |
-| withStaticFileOpts-prod | [StartupWithStaticFileOptions](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/StartupWithStaticFileOptions.cs) | Production |  |
-| withStaticFileOpts-iisexpr | [StartupWithStaticFileOptions](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/StartupWithStaticFileOptions.cs) | Production | IIS Express only |
+| startup class | env | npm scripts | path base | remarks |
+|---------------|-----|----------|----------|-------------|
+| [Startup](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/Startup.cs) | dev | start:wds <br> start:dotnet | / |
+| [Startup](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/Startup.cs) | prod | build:assets <br> start:dotnet:prod | / |
+| [Startup](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/Startup.cs) | prod | build:assets <br> N/A (see remarks) | / | visual studio <br> iis express |
+| [StartupWithPublicPath](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/StartupWithPublicPath.cs) | dev | start:wds:withPublicPath <br> start:dotnet:withPublicPath | /public |
+| [StartupWithPublicPath](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/StartupWithPublicPath.cs) | prod | build:assets:withPublicPath <br> start:dotnet:withPublicPath:prod | /public |
+| [StartupWithStaticFileOptions](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/StartupWithStaticFileOptions.cs) | prod | build:assets <br> start:dotnet:withStaticFileOpts:prod | / |
 
-Each profile can be launched using Visual Studio or dotnet CLI. For example, to launch "withPathBase" profile from command line
+Each profile can be launched using Visual Studio or dotnet CLI.
+1. Pick up a profile from the table
+2. Prepare the assets for serving using `npm run start:wds{:startup}|build:assets{:startup}` (see the first script in the "npm scripts" column)
+3. Launch the app using `npm run start:dotnet{:profile}` (see the second script in the "npm scripts" column or use visual studio)
+4. Use the path base from the column "path base" to open the app in the browser, if it was launched from the command line.
+
+### Example: production, with public path, command line
 
 ```shell
-export PUBLIC_PATH=/public/ && npm run start
-dotnet run --launch-profile withPublicPath
+npm run build:assets:withPublicPath && npm run start:dotnet:withPublicPath:prod
 ```
 
-This will launch the sample app using [StartupWithPublicPath](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/StartupWithPublicPath.cs) class on development environment.
+This will launch the sample app using [StartupWithPublicPath](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/StartupWithPublicPath.cs) class on production environment. To see it working open http://127.0.0.1:5000/public in the browser.
 
-Please notice, that all profiles for development environment require launching the dev server with a correct public path.
+### Example: development, command line
+
+Run these commands in separate sessions
+
+```shell
+npm run start:wds
+npm run start:dotnet
+```
+
+This will launch the sample app using [Startup](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/Startup.cs) class on development environment. To see it working open http://127.0.0.1:5000 in the browser.
+
+### Example: IIS Express
+
+Build the assets for the default configuration
+
+```shell
+npm run build:assets
+```
+
+and launch `default-iisexpr` profile from Visual Studio
+
+![vs-iisexpr](https://user-images.githubusercontent.com/5831301/31053549-621fcd30-a6d2-11e7-8efe-0b362b983755.png)
 
 ## Contributing & License
 

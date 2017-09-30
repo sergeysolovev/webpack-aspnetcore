@@ -16,7 +16,7 @@
       },
       "applicationUrl": "http://127.0.0.1:5000/"
     },
-    "default-prod": {
+    "default:prod": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
@@ -24,7 +24,7 @@
       },
       "applicationUrl": "http://127.0.0.1:5000/"
     },
-    "default-iisExpr": {
+    "default:iisExpr": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
@@ -41,32 +41,24 @@
       },
       "applicationUrl": "http://127.0.0.1:5000/"
     },
-    "withPublicPath-prod": {
+    "withPublicPath:prod": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "http://127.0.0.1:5000/public",
-      "commandLineArgs": "/startup withPublicPath",
+      "commandLineArgs": "--startup withPublicPath",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "applicationUrl": "http://127.0.0.1:5000/"
     },
-    "withStaticFileOpts-prod": {
+    "withStaticFileOpts:prod": {
       "commandName": "Project",
       "launchBrowser": true,
-      "commandLineArgs": "/startup withStaticFileOpts",
+      "commandLineArgs": "--startup withStaticFileOpts",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "applicationUrl": "http://127.0.0.1:5000/"
-    },
-    "withStaticFileOpts-iisExpr": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "commandLineArgs": "/startup withStaticFileOpts",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
-      }
     }
   }
 }
