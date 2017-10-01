@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
 using System;
 using System.IO;
 
@@ -42,8 +41,6 @@ namespace Webpack.AspNetCore.Static.Internal
         }
 
         public IFileInfo GetManifestFileInfo() => fileProvider.GetFileInfo(options.ManifestFileName);
-
-        public IChangeToken WatchManifestFile() => fileProvider.Watch(options.ManifestFileName);
 
         public string ManifestPhysicalPath => manifestPhysicalPath;
 

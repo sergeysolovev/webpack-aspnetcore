@@ -38,6 +38,7 @@ namespace Microsoft.Extensions.DependencyInjection
             // static services
             services.TryAddSingleton<ManifestStorage>();
             services.TryAddSingleton<PhysicalFileManifestReader>();
+            services.TryAddSingleton<ManifestMonitor>();
             services.TryAddSingleton<ManifestStorageService>();
             services.TryAddSingleton<StaticOptions>();
             services.TryAddSingleton<StaticContext>();

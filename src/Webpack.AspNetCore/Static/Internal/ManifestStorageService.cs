@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +11,14 @@ namespace Webpack.AspNetCore.Static.Internal
         private readonly StaticContext context;
         private readonly PhysicalFileManifestReader reader;
         private readonly ManifestStorage storage;
-        private readonly IHostingEnvironment environment;
+        private readonly ManifestMonitor monitor;
         private readonly ILogger<ManifestStorageService> logger;
 
         public ManifestStorageService(
             StaticContext context,
             PhysicalFileManifestReader reader,
             ManifestStorage storage,
-            IHostingEnvironment environment,
+            ManifestMonitor monitor,
             ILogger<ManifestStorageService> logger)
         {
             this.context = context ??
@@ -31,8 +30,8 @@ namespace Webpack.AspNetCore.Static.Internal
             this.storage = storage ??
                 throw new ArgumentNullException(nameof(storage));
 
-            this.environment = environment ??
-                throw new ArgumentNullException(nameof(environment));
+            this.monitor = monitor ??
+                throw new ArgumentNullException(nameof(monitor));
 
             this.logger = logger ??
                 throw new ArgumentNullException(nameof(logger));
@@ -46,11 +45,7 @@ namespace Webpack.AspNetCore.Static.Internal
             // for changes and updates the storage
             Task.Run(async () =>
             {
-                while (true)
-                {
-                    await waitForChanges();
-                    await updateStorage();
-                }
+                while (true) if (await monitor.WaitForChangesAsync()) await updateStorage();
             });
 
             async Task setupStorage()
@@ -106,27 +101,8 @@ namespace Webpack.AspNetCore.Static.Internal
                 }
             }
 
-            async Task waitForChanges()
-            {
-                // Use IFileProvider.Watch to monitor
-                // the asset manifest file changes
-                var token = context.WatchManifestFile();
-                var taskCompletionSource = new TaskCompletionSource<object>();
-
-                token.RegisterChangeCallback(
-                    state => ((TaskCompletionSource<object>)state).TrySetResult(null),
-                    taskCompletionSource
-                );
-
-                await taskCompletionSource.Task.ConfigureAwait(false);
-
-                logger.LogDebug(
-                    $"The contents of webpack asset manifest have been changed. " +
-                    $"File path: '{context.ManifestPhysicalPath}'."
-                );
-            }
-
             string keysFormatted(IEnumerable<string> keys) => string.Join(" ", keys);
         }
+
     }
 }
