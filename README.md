@@ -210,7 +210,7 @@ services.AddWebpack(options => options.UseStaticFileMiddleware = false);
 
 ## Contributing
 
-The goal of this project is give <span>ASP.NET</span> Core users a way to use all shiny and amazing webpack for production and development without pain. All your help is highly appreciated!
+The goal of this project is to give <span>ASP.NET</span> Core users a way to use all shiny and amazing webpack for production and development without pain. All your help is highly appreciated!
 
 Please, feel free to open a discussion [here](https://github.com/sergeysolovev/webpack-aspnetcore/issues) and make your pull requests.
 
