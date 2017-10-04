@@ -2,15 +2,25 @@
 
 <span>ASP.NET</span> Core 2.0 extension for using webpack assets in your views
 
-* Provides a single API for injecting the static and the dev server assets' paths into razor views
-* Automatically reloads the static assets' paths when the manifest file changes
-* Serves the dev server assets through a [reverse proxy middleware](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/src/Webpack.AspNetCore/DevServer/DevServerReverseProxyMiddleware.cs) and the static assets through [StaticFile](https://github.com/aspnet/StaticFiles) middleware
+* **Manifest-based:** Your asset manifest has keys, such as "app.js" or "index.css", mapped to their paths, which look like "static/js/app.2c8a1afe.js" or "static/css/index.1e09220e.css". While the keys are quite constant, the paths can change pretty often because of hashes. With webpack-aspnetcore you don't need to worry about paths' changes, since it uses the keys to inject the paths into your views. This lets you easily implement [long-term caching](https://webpack.js.org/guides/caching/).
+* **Dev Server:** It's very likely that you want to use webpack-dev-server for development. With webpack-aspnetcore you can do that with zero changes to your views and configuration, since it provides a single API to work with static and dev server assets.
+* **Auto reloading:** When you change your manifest file or it's folder, webpack-aspnetcore automatically reloads assets' paths, so you don't need to restart the production. Dev server auto reloading also works as expected.
+
+A sample web app is available [here](https://github.com/sergeysolovev/webpack-aspnetcore/tree/master/samples/WebApp).
+
+## Dev server vs. Dev middleware
+
+It does not (on purpose) use any kind of [webpack-dev-middleware](https://github.com/webpack/webpack-dev-middleware), adopted for <span>ASP.NET</span> Core, to serve the assets in the [dev mode](#the-static-and-the-dev-server-modes).
+
+It means the dev server has to be started manually, but only once, so you don't have to wait until all the assets get recompiled **every time you need to rebuild or restart your web app**. If it's not an issue, check out [Webpack dev middleware](https://github.com/aspnet/JavaScriptServices/tree/dev/src/Microsoft.AspNetCore.SpaServices#webpack-dev-middleware).
+
+Though it's not a big deal to do `npm run start` to start the dev server, there is [NPM Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.NPMTaskRunner) extension for Visual Studio, which lets you do this from the IDE and even bind it to project opening.
 
 ## Prerequisites
 
 You can use this extension for a web app that is built with <span>ASP.NET</span> Core 2.0 and has a [manifest](https://github.com/danethurber/webpack-manifest-plugin) for static assets. To use it for serving the dev server assets you need [webpack-dev-server](https://github.com/webpack/webpack-dev-server) installed.
 
-Use [.NET Core 2.0 SDK](https://www.microsoft.com/net/download/core) to build the source code and the [sample app](https://github.com/sergeysolovev/webpack-aspnetcore/tree/master/samples/WebApp/README.md)
+Use [.NET Core 2.0 SDK](https://www.microsoft.com/net/download/core) to build the source code and the [sample app](https://github.com/sergeysolovev/webpack-aspnetcore/tree/master/samples/WebApp)
 
 ## Installation
 
@@ -22,12 +32,6 @@ dotnet add package Webpack.AspNetCore
 
 ## Quick Start
 
-Make sure that a valid asset manifest is available at:
-* `YouWebApp/wwwroot/dist/manifest.json` for the static assets
-* `http://127.0.0.1:8080/manifest.json` for the dev server assets.
-
-**Tip**: You can compose the manifest file for the static assets manually without installing and configuring webpack
-
 Add a few lines to your [Startup.cs](https://github.com/sergeysolovev/webpack-aspnetcore/blob/master/samples/WebApp/Startup.cs)
 
 ```csharp
@@ -35,29 +39,17 @@ public void ConfigureServices(IServiceCollection services)
 {
     services.AddMvc();
     services.AddWebpack();
-    // ...
 }
 
 public void Configure(IApplicationBuilder app)
 {
-    // ...
-    if (env.IsDevelopment())
-    {
-        app.UseDeveloperExceptionPage();
-        app.UseWebpackDevServer();
-    }
-    else
-    {
-        app.UseExceptionHandler("/Home/Error");
-        app.UseWebpackStatic();
-    }
-
+    app.UseWebpack(withDevServer: env.IsDevelopment());
     app.UseStaticFiles();
     app.UseMvcWithDefaultRoute();
 }
 ```
 
-Inject the asset path mapper into razor views, that reference the assets
+Inject the asset path mapper into razor views, that need the assets
 
 ```html
 @using Webpack.AspNetCore
@@ -68,9 +60,13 @@ Inject the asset path mapper into razor views, that reference the assets
 <script src="@await assets("index.js")"></script>
 ```
 
-Run the [dev server](#dev-server-vs-dev-middleware) and the app. See the [next section](#default-configuration) on it works and check out the [sample app](https://github.com/sergeysolovev/webpack-aspnetcore/tree/master/samples/WebApp/README.md) for more examples.
+**Tip**: Add `@using Webpack.AspNetCore` once to `YourWebApp/Views/_ViewImports.cshtml` to avoid adding this line to every view.
 
-**Tip**: add `@using Webpack.AspNetCore` once to `YourWebApp/Views/_ViewImports.cshtml` to avoid adding this line to every view.
+Make sure that a valid asset manifest is available at
+* `YouWebApp/wwwroot/dist/manifest.json` for the static assets
+* `http://127.0.0.1:8080/manifest.json` if you use the dev server.
+
+Run the [dev server](#dev-server-vs-dev-middleware) and the app. See the [next section](#default-configuration) on how it works and check out the [sample app](https://github.com/sergeysolovev/webpack-aspnetcore/tree/master/samples/WebApp) for more examples.
 
 ## Default configuration
 
@@ -82,29 +78,7 @@ Default configuration, that's used in [Quick Start](#quick-start), works the fol
 ## Auto reloading
 
 * For the dev server assets auto reloading and hot module replacement work as expected on the front-end by the means of the dev server's web socket.
-* For the static webpack assets their paths are automatically reloaded on the back-end when any changes are made to the manifest file. It's enough to refresh a page to see the changes. There's no need to restart Kestrel or recompile razor views.
-
-## Dev server vs. Dev middleware
-
-It does not (on purpose) use any kind of [webpack-dev-middleware](https://github.com/webpack/webpack-dev-middleware), adopted for <span>ASP.NET</span> Core, to serve the assets in the [dev mode](#the-static-and-the-dev-server-modes).
-
-It means the dev server has to be started manually, but only once, so you don't have to wait until all the assets get recompiled **every time you need to rebuild or restart your web app**. If it's not an issue, check out [Webpack dev middleware](https://github.com/aspnet/JavaScriptServices/tree/dev/src/Microsoft.AspNetCore.SpaServices#webpack-dev-middleware).
-
-Though it's not a big deal to do `npm run start` to start the dev server, there is [NPM Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.NPMTaskRunner) extension for Visual Studio, which lets you do this from the IDE and even bind it to project opening.
-
-**Tip**: Regardless of chosen middleware, make sure that connections to `localhost` are fast enough on your development environment, as it can take long time to resolve `localhost` name or establish a TCP connection. That's why webpack-aspnetcore uses `127.0.0.1` as the dev server's host by default. To check connection performance on your environment you can use curl with `-w %{time_namelookup} %{time_connect}`. Here is an example of inadequate connection time on a windows environment:
-
-```shell
-curl -s -w "lookup: %{time_namelookup}\nconnect: %{time_connect}\n" -o NUL http://localhost:8080/manifest.json
-lookup: 0.006
-connect: 1.009 # <-- something is wrong
-
-curl -s -w "lookup: %{time_namelookup}\nconnect: %{time_connect}\n" -o NUL http://127.0.0.1:8080/manifest.json
-lookup: 0.000
-connect: 0.001
-```
-
-To fix this, check your `etc/hosts` and probably IPv6 configuration.
+* For the static webpack assets their paths are automatically reloaded on the back-end when any changes are made to the manifest file or it's folder. It's enough to refresh a page to see the changes. There's no need to restart Kestrel or recompile razor views.
 
 ## The static and the dev server modes
 
@@ -119,6 +93,20 @@ app.UseWebpack(withDevServer: env.IsDevelopment());
 This will make it work in the dev server mode for the development environment and in the static mode for other environments.
 
 **Tip**: You can use the static mode for non-webpack static assets, just make sure that the [manifest file format](https://github.com/danethurber/webpack-manifest-plugin#usage) is valid.
+
+**Tip**: Regardless of chosen middleware, make sure that connections to `localhost` are fast enough on your development environment, as it can take long time to resolve `localhost` name or establish a TCP connection. That's why webpack-aspnetcore uses `127.0.0.1` as the dev server's host by default. To check connection performance on your environment you can use curl with `-w %{time_namelookup} %{time_connect}`. Here is an example of inadequate connection time on a windows environment:
+
+```shell
+curl -s -w "lookup: %{time_namelookup}\nconnect: %{time_connect}\n" -o NUL http://localhost:8080/manifest.json
+lookup: 0.006
+connect: 1.009 # <-- something is wrong
+
+curl -s -w "lookup: %{time_namelookup}\nconnect: %{time_connect}\n" -o NUL http://127.0.0.1:8080/manifest.json
+lookup: 0.000
+connect: 0.001
+```
+
+To fix this, check your `etc/hosts` and probably IPv6 configuration.
 
 ## Configuration
 
