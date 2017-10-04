@@ -15,7 +15,7 @@ namespace Microsoft.AspNetCore.Builder
         public static IApplicationBuilder UseWebpackStatic(this IApplicationBuilder app)
             => UseWebpack(app, withDevServer: false);
 
-        private static IApplicationBuilder UseWebpack(IApplicationBuilder app, bool withDevServer)
+        public static IApplicationBuilder UseWebpack(IApplicationBuilder app, bool withDevServer)
         {
             var context = app.ApplicationServices.GetRequiredService<WebpackContext>();
 
