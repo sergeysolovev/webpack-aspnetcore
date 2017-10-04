@@ -1,4 +1,4 @@
-# webpack-aspnetcore
+# webpack-aspnetcore &middot; [![NuGet](https://img.shields.io/nuget/vpre/Webpack.AspNetCore.svg)](https://www.nuget.org/packages/Webpack.AspNetCore/2.0.0-alpha1) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#contributing)
 
 <span>ASP.NET</span> Core 2.0 extension for using webpack assets in your views
 
