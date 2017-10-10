@@ -2,7 +2,7 @@ node_modules
 bin
 obj
 logs
-**/wwwroot/dist
+samples/WebApp/wwwroot/dist
 asset-manifest.json
 .vs
 *.suo
