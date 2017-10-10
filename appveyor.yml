@@ -1,0 +1,29 @@
+version: 2.0.0-alpha1-build{build}
+image: Visual Studio 2017
+environment:
+  NODEJS_VERSION: "6"
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+install:
+  - ps: Install-Product node $env:NODEJS_VERSION
+  - cd samples/WebApp
+  - npm install -q
+  - cd ../../
+  - cd test/Webpack.AspnetCore.Tests.Integration
+  - npm install -q
+  - cd ../../
+before_build:
+  - dotnet restore
+build_script:
+  - cd samples/WebApp
+  - npm run build:assets
+  - cd ../../
+  - dotnet build
+before_test:
+  - cd test/Webpack.AspnetCore.Tests.Integration
+  - ps: Start-Process -WindowStyle Hidden npm -PassThru -ArgumentList "run start"
+test_script:
+  - dotnet xunit
+after_test:
+  - ps: get-process node | Stop-Process
+  - cd ../../
