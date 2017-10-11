@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Webpack.AspNetCore;
 using Xunit;
 
 namespace Webpack.AspnetCore.Tests.Integration
@@ -23,9 +25,8 @@ namespace Webpack.AspnetCore.Tests.Integration
 
             builder = new WebHostBuilder()
                 .UseWebRoot(webRoot)
-                .ConfigureServices(s => s
-                    .AddWebpack()
-                    .AddStaticOptions(opts =>
+                .ConfigureServices(services => {
+                    services.AddWebpack().AddStaticOptions(opts =>
                     {
                         opts.RequestPath = "/public/";
                         opts.ManifestDirectoryPath = "/dist/";
@@ -35,8 +36,12 @@ namespace Webpack.AspnetCore.Tests.Integration
                                 value: "public,max-age=31536000"
                             );
                         opts.UseStaticFileMiddleware = true;
-                    })
-                )
+                    });
+
+                    services.AddSingleton<IHttpContextAccessor>(
+                        new CustomHttpContextAccessor(PathString.Empty)
+                    );
+                })
                 .Configure(app => app.UseWebpackStatic());
 
             server = new TestServer(builder);
@@ -50,10 +55,12 @@ namespace Webpack.AspnetCore.Tests.Integration
             // specified settings to serve a static asset
             // with static file middleware
 
-            var assetUrl = "static/js/index.1e09220e.js";
-            var response = await client.GetAsync($"public/{assetUrl}");
+            var services = server.Host.Services;
+            var assetPathMapper = services.GetRequiredService<AssetPathMapper>();
+            var assetUrl = await assetPathMapper("index.js");
+            var response = await client.GetAsync(assetUrl);
             var responseContent = await response.Content.ReadAsStringAsync();
-            var filePath = Path.Combine(webRoot, $"dist/{assetUrl}");
+            var filePath = Path.Combine(webRoot, $"dist/static/js/index.1e09220e.js");
             var fileContent = await File.ReadAllTextAsync(filePath);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

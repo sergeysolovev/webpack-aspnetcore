@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Webpack.AspNetCore;
 using Xunit;
 
 namespace Webpack.AspnetCore.Tests.Integration
@@ -18,15 +20,18 @@ namespace Webpack.AspnetCore.Tests.Integration
         public DevServerAssetTests()
         {
             builder = new WebHostBuilder()
-                .ConfigureServices(s => s
-                    .AddWebpack()
-                    .AddDevServerOptions(opts =>
+                .ConfigureServices(services => {
+                    services.AddWebpack().AddDevServerOptions(opts =>
                     {
                         opts.PublicPath = "/public/";
                         opts.Port = 8081;
                         opts.ManifestFileName = "webpack-assets.json";
-                    })
-                )
+                    });
+
+                    services.AddSingleton<IHttpContextAccessor>(
+                        new CustomHttpContextAccessor("/public")
+                    );
+                })
                 .Configure(app => app.UseWebpackDevServer());
 
             server = new TestServer(builder);
@@ -40,8 +45,10 @@ namespace Webpack.AspnetCore.Tests.Integration
             // specified settings to serve a dev server asset
             // throught the reverse proxy
 
-            var assetUrl = "index.js";
-            var response = await client.GetAsync($"public/{assetUrl}");
+            var services = server.Host.Services;
+            var assetPathMapper = services.GetRequiredService<AssetPathMapper>();
+            var assetUrl = await assetPathMapper("index.js");
+            var response = await client.GetAsync(assetUrl);
             var responseContent = await response.Content.ReadAsStringAsync();
             var etag = response.Headers.ETag;
 
@@ -52,7 +59,7 @@ namespace Webpack.AspnetCore.Tests.Integration
             // here we test that the reverse proxy doesn't mess up
             // with etagged request and respond with 304
 
-            var requestWithEtag = new HttpRequestMessage(HttpMethod.Get, $"public/{assetUrl}");
+            var requestWithEtag = new HttpRequestMessage(HttpMethod.Get, assetUrl);
             requestWithEtag.Headers.Add("If-None-Match", etag.ToString());
 
             response = await client.SendAsync(requestWithEtag);
