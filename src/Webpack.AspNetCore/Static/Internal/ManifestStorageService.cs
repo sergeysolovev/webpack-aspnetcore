@@ -4,20 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Webpack.AspnetCore.Tests.Integration")]
+
 namespace Webpack.AspNetCore.Static.Internal
 {
     internal class ManifestStorageService
     {
         private readonly StaticContext context;
         private readonly PhysicalFileManifestReader reader;
-        private readonly ManifestStorage storage;
         private readonly ManifestMonitor monitor;
         private readonly ILogger<ManifestStorageService> logger;
+        private Task<ManifestStorage> getStorage;
 
         public ManifestStorageService(
             StaticContext context,
             PhysicalFileManifestReader reader,
-            ManifestStorage storage,
             ManifestMonitor monitor,
             ILogger<ManifestStorageService> logger)
         {
@@ -27,9 +28,6 @@ namespace Webpack.AspNetCore.Static.Internal
             this.reader = reader ??
                 throw new ArgumentNullException(nameof(reader));
 
-            this.storage = storage ??
-                throw new ArgumentNullException(nameof(storage));
-
             this.monitor = monitor ??
                 throw new ArgumentNullException(nameof(monitor));
 
@@ -37,19 +35,35 @@ namespace Webpack.AspNetCore.Static.Internal
                 throw new ArgumentNullException(nameof(logger));
         }
 
+        public Action StorageUpdated { get; set; }
+
+        public Task<ManifestStorage> GetStorageAsync()
+        {
+            if (getStorage == null)
+            {
+                throw new InvalidOperationException("The service has not yet started");
+            }
+
+            return getStorage;
+        }
+
         public void Start()
         {
-            setupStorage().Wait();
+            getStorage = setupStorageAsync();
 
-            // run a background job which checks the manifest file
-            // for changes and updates the storage
-            Task.Run(async () =>
+            monitor.ManifestChanged += async () =>
             {
-                while (true) if (await monitor.WaitForChangesAsync()) await updateStorage();
-            });
+                if (await updateStorageAsync(await GetStorageAsync()))
+                {
+                    onStorageUpdated();
+                }
+            };
 
-            async Task setupStorage()
+            monitor.Start();
+
+            async Task<ManifestStorage> setupStorageAsync()
             {
+                var storage = new ManifestStorage();
                 var manifest = await reader.ReadAsync();
 
                 // if we've failed to retrieve asset manifest
@@ -73,9 +87,11 @@ namespace Webpack.AspNetCore.Static.Internal
                     "Webpack asset manifest storage has been set up. " +
                     $"Keys: ({keysFormatted(manifest.Keys)})"
                 );
+
+                return storage;
             }
 
-            async Task updateStorage()
+            async Task<bool> updateStorageAsync(ManifestStorage storage)
             {
                 var manifest = await reader.ReadAsync();
 
@@ -85,7 +101,7 @@ namespace Webpack.AspNetCore.Static.Internal
                 if (manifest == null)
                 {
                     logger.LogDebug($"Webpack asset manifest storage can not be updated now");
-                    return;
+                    return false;
                 }
 
                 // update the storage
@@ -98,6 +114,19 @@ namespace Webpack.AspNetCore.Static.Internal
                         "Webpack asset manifest storage has been updated. " +
                         $"Updated keys: ({keysFormatted(updatedKeys)})"
                     );
+
+                    return true;
+                }
+
+                return false;
+            }
+
+            void onStorageUpdated()
+            {
+                var callback = StorageUpdated;
+                if (callback != null)
+                {
+                    callback.Invoke();
                 }
             }
 

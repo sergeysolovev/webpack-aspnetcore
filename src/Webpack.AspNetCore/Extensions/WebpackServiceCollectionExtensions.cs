@@ -36,7 +36,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<DevServerAssetPathRepository>();
             
             // static services
-            services.TryAddSingleton<ManifestStorage>();
             services.TryAddSingleton<PhysicalFileManifestReader>();
             services.TryAddSingleton<ManifestMonitor>();
             services.TryAddSingleton<ManifestStorageService>();

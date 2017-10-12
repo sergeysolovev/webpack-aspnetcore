@@ -13,21 +13,21 @@ namespace Webpack.AspNetCore.Static.Internal
     internal class StaticAssetPathRepository : IAssetPathRepository
     {
         private readonly StaticContext context;
-        private readonly ManifestStorage storage;
+        private readonly ManifestStorageService storageService;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly ILogger<StaticAssetPathRepository> logger;
 
         public StaticAssetPathRepository(
             StaticContext context,
-            ManifestStorage storage,
+            ManifestStorageService storageService,
             IHttpContextAccessor httpContextAccessor,
             ILogger<StaticAssetPathRepository> logger)
         {
             this.context = context ??
                 throw new ArgumentNullException(nameof(context));
 
-            this.storage = storage ??
-                throw new ArgumentNullException(nameof(storage));
+            this.storageService = storageService ??
+                throw new ArgumentNullException(nameof(storageService));
 
             this.httpContextAccessor = httpContextAccessor ??
                 throw new ArgumentNullException(nameof(httpContextAccessor));
@@ -36,18 +36,19 @@ namespace Webpack.AspNetCore.Static.Internal
                 throw new ArgumentNullException(nameof(logger));
         }
 
-        public ValueTask<string> Get(string assetKey)
+        public async ValueTask<string> Get(string assetKey)
         {
             if (string.IsNullOrEmpty(assetKey))
             {
-                return new ValueTask<string>(result: null);
+                return null;
             }
 
+            var storage = await storageService.GetStorageAsync();
             var assetUrl = storage.Get(assetKey) ?? storage.Get(withForwardSlash());
 
             if (string.IsNullOrEmpty(assetUrl))
             {
-                return new ValueTask<string>(result: null);
+                return null;
             }
 
             var pathBase = makePath(httpContextAccessor.HttpContext.Request.PathBase);
@@ -60,7 +61,7 @@ namespace Webpack.AspNetCore.Static.Internal
                 $"Public path: '{publicPath}'."
             );
 
-            return new ValueTask<string>(result: assetPath);
+            return assetPath;
 
             string withForwardSlash() => assetKey.Replace('/', '\\');
             PathString makePath(string value) => new PathString('/' + value.Trim('/'));
