@@ -37,6 +37,8 @@ namespace Webpack.AspNetCore.Static.Internal
 
         public Action StorageUpdated { get; set; }
 
+        public Action StorageContentsUpdated { get; set; }
+
         public Task<ManifestStorage> GetStorageAsync()
         {
             if (getStorage == null)
@@ -53,9 +55,13 @@ namespace Webpack.AspNetCore.Static.Internal
 
             monitor.ManifestChanged += async () =>
             {
-                if (await updateStorageAsync(await GetStorageAsync()))
+                var storage = await GetStorageAsync();
+                var contentsUpdated = await updateStorageAsync(storage);
+
+                onStorageUpdated();
+                if (contentsUpdated)
                 {
-                    onStorageUpdated();
+                    onStorageContentsUpdated();
                 }
             };
 
@@ -124,6 +130,15 @@ namespace Webpack.AspNetCore.Static.Internal
             void onStorageUpdated()
             {
                 var callback = StorageUpdated;
+                if (callback != null)
+                {
+                    callback.Invoke();
+                }
+            }
+
+            void onStorageContentsUpdated()
+            {
+                var callback = StorageContentsUpdated;
                 if (callback != null)
                 {
                     callback.Invoke();

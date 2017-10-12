@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\**\*">
+    <Content Include="assets\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -14,9 +14,6 @@
   <ItemGroup>
     <Content Include="app\index.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="package.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
 
@@ -29,10 +26,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.0" />
-    <!-- <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.0.0" /> -->
-    <!-- <PackageReference Include="Microsoft.AspNetCore.Server.HttpSys" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.IntegrationTesting" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Testing" /> -->
   </ItemGroup>
 
   <ItemGroup>
