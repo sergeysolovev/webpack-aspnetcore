@@ -4,7 +4,7 @@
   "description": "webpack-aspnetcore integration tests",
   "scripts": {
     "test": "dotnet xunit",
-    "start": "cross-env PUBLIC_PATH=/public/ NODE_ENV=development webpack-dev-server --env=dev --progress --profile --colors"
+    "start": "cross-env PUBLIC_PATH=/public/ NODE_ENV=development webpack-dev-server --env=dev --quiet"
   },
   "author": "Sergey Solovev",
   "license": "MIT",

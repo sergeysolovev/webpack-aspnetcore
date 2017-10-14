@@ -1,35 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
-
   <ItemGroup>
     <Content Include="assets\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="app\index.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
-    <PackageReference Include="xunit" Version="2.3.0-rc1-build3809" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
-    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0-rc1-build3809" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.0" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\src\Webpack.AspNetCore\Webpack.AspNetCore.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0-beta1-build3829" />
+    <PackageReference Include="xunit" Version="2.4.0-beta1-build3829" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.4.0-beta1-build3829" />
+  </ItemGroup>
 </Project>

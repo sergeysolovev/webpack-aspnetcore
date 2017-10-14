@@ -2,5 +2,16 @@ language: csharp
 mono: none
 dotnet: 2.0.0
 dist: trusty
+solution: Webpack.AspNetCore.sln
+node_js:
+  - "6"
+install:
+  - cd test/Webpack.AspnetCore.Tests.Integration/
+  - npm install
+  - cd ../../
 script:
   - dotnet build
+  - cd test/Webpack.AspnetCore.Tests.Integration/
+  - npm run start &
+  - dotnet xunit
+  - kill %1
