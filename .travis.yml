@@ -6,12 +6,12 @@ solution: Webpack.AspNetCore.sln
 node_js:
   - "6"
 install:
-  - cd test/Webpack.AspnetCore.Tests.Integration/
+  - cd test/Webpack.AspNetCore.Tests.Integration/
   - npm install
   - cd ../../
 script:
   - dotnet build
-  - cd test/Webpack.AspnetCore.Tests.Integration/
+  - cd test/Webpack.AspNetCore.Tests.Integration/
   - npm run start &
   - dotnet xunit
   - kill %1
