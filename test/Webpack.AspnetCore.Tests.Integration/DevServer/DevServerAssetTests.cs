@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Webpack.AspNetCore;
 using Xunit;
 
-namespace Webpack.AspnetCore.Tests.Integration.DevServer
+namespace Webpack.AspNetCore.Tests.Integration.DevServer
 {
     public class DevServerAssetTests
     {

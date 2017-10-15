@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Webpack.AspnetCore.Tests.Integration.Static
+namespace Webpack.AspNetCore.Tests.Integration.Static
 {
     public class WhenRequestingAsset
     {

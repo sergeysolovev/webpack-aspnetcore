@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Webpack.AspnetCore.Tests.Integration.Static
+namespace Webpack.AspNetCore.Tests.Integration.Static
 {
     public static class CopyUtil
     {

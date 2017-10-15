@@ -12,7 +12,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "samples\WebApp\We
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D88AA116-2C4A-4B83-8223-FD65972D6ED5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webpack.AspnetCore.Tests.Integration", "test\Webpack.AspnetCore.Tests.Integration\Webpack.AspnetCore.Tests.Integration.csproj", "{65BFD90D-462F-46F6-924A-5C795888441B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webpack.AspNetCore.Tests.Integration", "test\Webpack.AspNetCore.Tests.Integration\Webpack.AspNetCore.Tests.Integration.csproj", "{65BFD90D-462F-46F6-924A-5C795888441B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Webpack.AspNetCore;
 using Webpack.AspNetCore.Static.Internal;
 
-namespace Webpack.AspnetCore.Tests.Integration.Static
+namespace Webpack.AspNetCore.Tests.Integration.Static
 {
     internal class StaticAssetTestContext : IDisposable
     {

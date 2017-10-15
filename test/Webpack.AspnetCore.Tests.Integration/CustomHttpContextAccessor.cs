@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 
-namespace Webpack.AspnetCore.Tests.Integration
+namespace Webpack.AspNetCore.Tests.Integration
 {
     internal class CustomHttpContextAccessor : IHttpContextAccessor
     {
@@ -22,7 +22,7 @@ namespace Webpack.AspnetCore.Tests.Integration
                     context = new DefaultHttpContext();
                     context.Request.PathBase = pathBase;
                 }
-                
+
                 return context;
             }
             set
