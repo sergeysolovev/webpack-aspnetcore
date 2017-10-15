@@ -17,6 +17,10 @@
   },
   "author": "Sergey Solovev",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergeysolovev/webpack-aspnetcore.git"
+  },
   "devDependencies": {
     "autoprefixer": "7.1.2",
     "babel-cli": "6.26.0",

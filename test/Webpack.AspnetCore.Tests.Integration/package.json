@@ -8,6 +8,10 @@
   },
   "author": "Sergey Solovev",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergeysolovev/webpack-aspnetcore.git"
+  },
   "devDependencies": {
     "clean-webpack-plugin": "0.1.16",
     "cross-env": "5.0.5",
