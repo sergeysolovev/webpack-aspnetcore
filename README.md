@@ -196,6 +196,17 @@ If for some reason you don't need to use StaticFile middleware, it can be disabl
 services.AddWebpack(options => options.UseStaticFileMiddleware = false);
 ```
 
+## Running tests
+
+Use a script
+
+```shell
+# unix and osx
+test/run.sh
+```
+
+This will start the dev server, required for integration tests, run the tests and stop the server after that. Alternatively, use Visual Studio Test Explorer and run the dev server before running the tests.
+
 ## Contributing
 
 The goal of this project is to give <span>ASP.NET</span> Core users a way to use all shiny and amazing webpack for production and development without pain. All your help is highly appreciated!
