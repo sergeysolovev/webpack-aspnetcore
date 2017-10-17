@@ -1,18 +1,18 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Xunit;
 
 namespace Webpack.AspNetCore.Tests.Integration.Static
 {
-    public class WhenRecreatingManifestDirectory
+    public class WhenChangingManifestContents
     {
         [Fact]
         public async Task ShouldResolveNewAssetPath()
         {
             // here we're testing that the SUT
-            // detects that the manifest folder was recreated,
-            // reloads the manifest it and resolves the new asset path
+            // detects the changes to the manifest file,
+            // reloads it and resolves the new asset path
 
-            using (var context = new StaticAssetTestContext())
+            using (var context = new StaticTestContext())
             {
                 var assetPathMapper = context.GetAssetPathMapper();
 
@@ -21,9 +21,9 @@ namespace Webpack.AspNetCore.Tests.Integration.Static
                 var assetPath = await assetPathMapper("index.js");
                 Assert.Equal(context.AssetPath, assetPath);
 
-                // recreate the manifest directory
+                // rewrite the manifest file
                 // the asset path mapper should resolve the new asset path
-                context.DeployAltAssets();
+                await context.RewriteManifestFileAsync();
                 await context.WaitForStorageContentsUpdate();
                 assetPath = await assetPathMapper("index.js");
 

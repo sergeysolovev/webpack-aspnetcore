@@ -1,24 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="assets\**\*">
+    <Content Include="assets\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Webpack.AspNetCore\Webpack.AspNetCore.csproj" />
+    <ProjectReference Include="..\WebSites\BasicWebSite\BasicWebSite.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0-beta1-build3829" />
-    <PackageReference Include="xunit" Version="2.4.0-beta1-build3829" />
-    <DotNetCliToolReference Include="dotnet-xunit" Version="2.4.0-beta1-build3829" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0-beta1-build3834" />
+    <PackageReference Include="xunit" Version="2.4.0-beta1-build3834" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.4.0-beta1-build3834" />
   </ItemGroup>
+  <Target Name="CopyDepsFiles" AfterTargets="Build" Condition="'$(TargetFramework)'!=''">
+    <ItemGroup>
+      <DepsFilePaths Include="$([System.IO.Path]::ChangeExtension('%(_ResolvedProjectReferencePaths.FullPath)', '.deps.json'))" />
+    </ItemGroup>
+    <Copy SourceFiles="%(DepsFilePaths.FullPath)" DestinationFolder="$(OutputPath)" Condition="Exists('%(DepsFilePaths.FullPath)')" />
+  </Target>
 </Project>

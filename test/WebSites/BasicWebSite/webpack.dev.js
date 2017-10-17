@@ -11,7 +11,7 @@ const config = {
     index: path.resolve(__dirname, 'app/index')
   },
   output: {
-    filename: '[name].js',
+    filename: '[name].6d4f63cc.js',
     publicPath
   },
   devServer: {

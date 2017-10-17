@@ -3,15 +3,15 @@ using Xunit;
 
 namespace Webpack.AspNetCore.Tests.Integration.Static
 {
-    public class WhenDeletingManifestDirectory
+    public class WhenDeletingManifest
     {
         [Fact]
         public async Task ShouldResolveAssetPath()
         {
-            // after the manifest directory was deleted
+            // after the manifest file was deleted
             // the asset path should still resolve
 
-            using (var context = new StaticAssetTestContext())
+            using (var context = new StaticTestContext())
             {
                 var assetPathMapper = context.GetAssetPathMapper();
 
@@ -22,7 +22,7 @@ namespace Webpack.AspNetCore.Tests.Integration.Static
 
                 // recreate the manifest directory
                 // the asset path mapper should resolve the new asset path
-                context.DeleteAssetDir();
+                context.DeleteManifest();
                 await context.WaitForStorageUpdate();
                 assetPath = await assetPathMapper("index.js");
 

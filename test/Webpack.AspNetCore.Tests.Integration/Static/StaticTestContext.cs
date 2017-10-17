@@ -7,12 +7,11 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Webpack.AspNetCore;
 using Webpack.AspNetCore.Static.Internal;
 
 namespace Webpack.AspNetCore.Tests.Integration.Static
 {
-    internal class StaticAssetTestContext : IDisposable
+    internal class StaticTestContext : IDisposable
     {
         public readonly string AssetUrl = "static/js/index.1e09220e.js";
         public readonly string AssetPath = "/public/static/js/index.1e09220e.js";
@@ -27,7 +26,7 @@ namespace Webpack.AspNetCore.Tests.Integration.Static
         private TestServer server;
         private HttpClient client;
 
-        public StaticAssetTestContext()
+        public StaticTestContext()
         {
             // We're using a separate web root for
             // each context instance to provide isolation
@@ -46,9 +45,11 @@ namespace Webpack.AspNetCore.Tests.Integration.Static
                 DeployAssets();
 
                 var builder = new WebHostBuilder()
+                    .UseContentRoot(WebSite.GetContentRoot())
                     .UseWebRoot(webRoot)
                     .ConfigureServices(services =>
                     {
+                        services.AddMvc();
                         services.AddWebpack().AddStaticOptions(opts =>
                         {
                             opts.RequestPath = "/public/";
@@ -62,10 +63,13 @@ namespace Webpack.AspNetCore.Tests.Integration.Static
                         });
 
                         services.AddSingleton<IHttpContextAccessor>(
-                            new CustomHttpContextAccessor(PathString.Empty)
+                            new CustomHttpContextAccessor()
                         );
                     })
-                    .Configure(app => app.UseWebpackStatic());
+                    .Configure(app => {
+                        app.UseWebpackStatic();
+                        app.UseMvcWithDefaultRoute();
+                    });
 
                 server = new TestServer(builder);
                 setupWaitingForStorageUpdate();

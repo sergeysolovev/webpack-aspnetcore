@@ -8,9 +8,14 @@ namespace Webpack.AspNetCore.Tests.Integration
         private readonly PathString pathBase;
         private HttpContext context;
 
+        public CustomHttpContextAccessor() : this(PathString.Empty)
+        {
+
+        }
+
         public CustomHttpContextAccessor(PathString pathBase)
         {
-            this.pathBase = pathBase;
+            this.pathBase = pathBase.Value.TrimEnd('/');
         }
 
         public HttpContext HttpContext

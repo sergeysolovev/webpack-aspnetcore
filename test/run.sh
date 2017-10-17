@@ -1,6 +1,12 @@
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/Webpack.AspNetCore.Tests.Integration
+
+# run the dev server
+cd $dir/WebSites/BasicWebSite
 npm install
 npm run start &
-dotnet restore && dotnet xunit
+
+# run the tests
+cd $dir/Webpack.AspNetCore.Tests.Integration
+dotnet restore && dotnet test
+
 kill %1

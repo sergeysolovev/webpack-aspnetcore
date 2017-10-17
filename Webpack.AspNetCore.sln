@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C5FB1564-3872-4081-88AC-898333F3C4F2}"
 EndProject
@@ -12,7 +12,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "samples\WebApp\We
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D88AA116-2C4A-4B83-8223-FD65972D6ED5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webpack.AspNetCore.Tests.Integration", "test\Webpack.AspNetCore.Tests.Integration\Webpack.AspNetCore.Tests.Integration.csproj", "{65BFD90D-462F-46F6-924A-5C795888441B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webpack.AspNetCore.Tests.Integration", "test\Webpack.AspNetCore.Tests.Integration\Webpack.AspNetCore.Tests.Integration.csproj", "{65BFD90D-462F-46F6-924A-5C795888441B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebSites", "WebSites", "{18612E8B-595A-415A-BB2E-272826E8F755}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicWebSite", "test\WebSites\BasicWebSite\BasicWebSite.csproj", "{2FF0F9B8-91D0-4A94-96EF-3177206CE038}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{61943095-BA30-4558-AA01-BA12CFCA042A}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		.travis.yml = .travis.yml
+		appveyor.yml = appveyor.yml
+		LICENSE = LICENSE
+		NuGet.Config = NuGet.Config
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +74,18 @@ Global
 		{65BFD90D-462F-46F6-924A-5C795888441B}.Release|x64.Build.0 = Release|Any CPU
 		{65BFD90D-462F-46F6-924A-5C795888441B}.Release|x86.ActiveCfg = Release|Any CPU
 		{65BFD90D-462F-46F6-924A-5C795888441B}.Release|x86.Build.0 = Release|Any CPU
+		{2FF0F9B8-91D0-4A94-96EF-3177206CE038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FF0F9B8-91D0-4A94-96EF-3177206CE038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FF0F9B8-91D0-4A94-96EF-3177206CE038}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2FF0F9B8-91D0-4A94-96EF-3177206CE038}.Debug|x64.Build.0 = Debug|Any CPU
+		{2FF0F9B8-91D0-4A94-96EF-3177206CE038}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2FF0F9B8-91D0-4A94-96EF-3177206CE038}.Debug|x86.Build.0 = Debug|Any CPU
+		{2FF0F9B8-91D0-4A94-96EF-3177206CE038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FF0F9B8-91D0-4A94-96EF-3177206CE038}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FF0F9B8-91D0-4A94-96EF-3177206CE038}.Release|x64.ActiveCfg = Release|Any CPU
+		{2FF0F9B8-91D0-4A94-96EF-3177206CE038}.Release|x64.Build.0 = Release|Any CPU
+		{2FF0F9B8-91D0-4A94-96EF-3177206CE038}.Release|x86.ActiveCfg = Release|Any CPU
+		{2FF0F9B8-91D0-4A94-96EF-3177206CE038}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +94,8 @@ Global
 		{04DC89C5-063F-4526-BB6E-5FCC4E2D9268} = {C5FB1564-3872-4081-88AC-898333F3C4F2}
 		{0F244BCB-668D-4310-9752-77C5D14749AE} = {76900BD3-48F1-4EE5-850D-7C34FC86F042}
 		{65BFD90D-462F-46F6-924A-5C795888441B} = {D88AA116-2C4A-4B83-8223-FD65972D6ED5}
+		{18612E8B-595A-415A-BB2E-272826E8F755} = {D88AA116-2C4A-4B83-8223-FD65972D6ED5}
+		{2FF0F9B8-91D0-4A94-96EF-3177206CE038} = {18612E8B-595A-415A-BB2E-272826E8F755}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A8E42E48-3E8F-4257-AD96-4B22EB9015D9}

@@ -13,7 +13,7 @@ namespace Webpack.AspNetCore.Tests.Integration.Static
             // specified settings to serve a static asset
             // with static file middleware
 
-            using (var context = new StaticAssetTestContext())
+            using (var context = new StaticTestContext())
             {
                 var assetPathMapper = context.GetAssetPathMapper();
                 var assetPath = await assetPathMapper("index.js");
