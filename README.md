@@ -41,11 +41,20 @@ public void ConfigureServices(IServiceCollection services)
     services.AddWebpack();
 }
 
-public void Configure(IApplicationBuilder app)
+public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 {
-    app.UseWebpack(withDevServer: env.IsDevelopment());
+    if (env.IsDevelopment())
+    {
+        //...
+        app.UseWebpackDevServer();
+    }
+        else
+    {
+        //...
+        app.UseWebpackStatic();
+    }
+    //...
     app.UseStaticFiles();
-    app.UseMvcWithDefaultRoute();
 }
 ```
 
@@ -84,13 +93,7 @@ Default configuration, that's used in [Quick Start](#quick-start), works the fol
 
 The extension can work in two modes: the static mode and the dev server mode. In the static mode it serves the assets from a physical location and in the dev mode it does so from the dev server. Since it provides a single API for obtaining the dev server and the static assets' paths, it can only work in one mode at the same time.
 
-Use `app.UseWebpackStatic()` for the static mode and `app.UseWebpackDevServer()` for the dev server mode in the `Configure` method of your startup class. You can also use a single statement for the both modes
-
-```csharp
-app.UseWebpack(withDevServer: env.IsDevelopment());
-```
-
-This will make it work in the dev server mode for the development environment and in the static mode for other environments.
+Use `app.UseWebpackStatic()` for the static mode and `app.UseWebpackDevServer()` for the dev server mode in the `Configure` method of your startup class. 
 
 **Tip**: You can use the static mode for non-webpack static assets, just make sure that the [manifest file format](https://github.com/danethurber/webpack-manifest-plugin#usage) is valid.
 
