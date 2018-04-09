@@ -1,4 +1,4 @@
-version: 2.0.0-alpha1-build{build}
+version: 2.0.0-beta3-build{build}
 image: Visual Studio 2017
 environment:
   NODEJS_VERSION: "6"
