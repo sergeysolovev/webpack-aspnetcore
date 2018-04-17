@@ -2,19 +2,15 @@
 
 <span>ASP.NET</span> Core 2.0 extension for using webpack assets in your views
 
-* **Manifest-based:** Your asset manifest has keys, such as "app.js" or
-  "index.css", mapped to their paths, which look like
-  "static/js/app.2c8a1afe.js" or "static/css/index.1e09220e.css". While the keys
-  are quite constant, the paths can change pretty often because of hashes. With
-  webpack-aspnetcore you don't need to worry about paths' changes, since it uses
-  the keys to inject the paths into your views. This lets you easily implement
-  [long-term caching](https://webpack.js.org/guides/caching/).
-* **Dev Server:** It's very likely that you want to use webpack-dev-server for
-  development. With webpack-aspnetcore you can do that with zero changes to your
-  views and configuration, since it provides a single API to work with static
-  and dev server assets.
+* **Manifest-based:** Injects assets' paths with correct hashes right into your
+  views. This way you can implement
+  [long-term caching](https://webpack.js.org/guides/caching/) without pain.
+* **Zero configuration dev server support:** It's very likely that you want to
+  use webpack-dev-server for development. With webpack-aspnetcore you can do
+  that with zero changes to your views and configuration, since it provides a
+  single API to work with static and dev server assets.
 * **Auto reloading:** When you change your manifest file or it's folder,
-  webpack-aspnetcore automatically reloads assets' paths, so you don't need to
+  it automatically reloads assets' paths, so you don't need to
   restart the production. Dev server auto reloading also works as expected.
 
 A sample web app is available
