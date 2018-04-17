@@ -20,45 +20,6 @@
 A sample web app is available
 [here](https://github.com/sergeysolovev/webpack-aspnetcore/tree/master/samples/WebApp).
 
-## Dev server vs. Dev middleware
-
-It does not (on purpose) use any kind of
-[webpack-dev-middleware](https://github.com/webpack/webpack-dev-middleware),
-adopted for <span>ASP.NET</span> Core, to serve the assets in the
-[dev mode](#the-static-and-the-dev-server-modes).
-
-It means the dev server has to be started manually, but only once, so you don't
-have to wait until all the assets get recompiled **every time you need to
-rebuild or restart your web app**. If it's not an issue, check out
-[Webpack dev middleware](https://github.com/aspnet/JavaScriptServices/tree/dev/src/Microsoft.AspNetCore.SpaServices#webpack-dev-middleware).
-
-Though it's not a big deal to do `npm run start` to start the dev server, there
-is
-[NPM Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.NPMTaskRunner)
-extension for Visual Studio, which lets you do this from the IDE and even bind
-it to project opening.
-
-## Prerequisites
-
-You can use this extension for a web app that is built with <span>ASP.NET</span>
-Core 2.0 and has a
-[manifest](https://github.com/danethurber/webpack-manifest-plugin) for static
-assets. To use it for serving the dev server assets you need
-[webpack-dev-server](https://github.com/webpack/webpack-dev-server) installed.
-
-Use [.NET Core 2.0 SDK](https://www.microsoft.com/net/download/core) to build
-the source code and the
-[sample app](https://github.com/sergeysolovev/webpack-aspnetcore/tree/master/samples/WebApp)
-
-## Installation
-
-Use NuGet Package Manager for Visual Studio to find and install the package
-"Webpack.AspNetCore" or use dotnet CLI
-
-```shell
-dotnet add package Webpack.AspNetCore
-```
-
 ## Quick Start
 
 Add a few lines to your
@@ -98,10 +59,49 @@ Make sure that a valid asset manifest is available at
 * `YouWebApp/wwwroot/dist/manifest.json` for the static assets
 * `http://127.0.0.1:8080/manifest.json` if you use the dev server.
 
-Run the [dev server](#dev-server-vs-dev-middleware) and the app. See the
-[next section](#default-configuration) on how it works and check out the
+Run the [dev server](#dev-server-vs-dev-middleware) and the app. See
+[this section](#default-configuration) on how it works and check out the
 [sample app](https://github.com/sergeysolovev/webpack-aspnetcore/tree/master/samples/WebApp)
 for more examples.
+
+## Installation
+
+Use NuGet Package Manager for Visual Studio to find and install the package
+"Webpack.AspNetCore" or use dotnet CLI
+
+```shell
+dotnet add package Webpack.AspNetCore
+```
+
+## Prerequisites
+
+You can use this extension for a web app that is built with <span>ASP.NET</span>
+Core 2.0 and has a
+[manifest](https://github.com/danethurber/webpack-manifest-plugin) for static
+assets. To use it for serving the dev server assets you need
+[webpack-dev-server](https://github.com/webpack/webpack-dev-server) installed.
+
+Use [.NET Core 2.0 SDK](https://www.microsoft.com/net/download/core) to build
+the source code and the
+[sample app](https://github.com/sergeysolovev/webpack-aspnetcore/tree/master/samples/WebApp)
+
+## Dev server vs. Dev middleware
+
+It does not (on purpose) use any kind of
+[webpack-dev-middleware](https://github.com/webpack/webpack-dev-middleware),
+adopted for <span>ASP.NET</span> Core, to serve the assets in the
+[dev mode](#the-static-and-the-dev-server-modes).
+
+It means the dev server has to be started manually, but only once, so you don't
+have to wait until all the assets get recompiled **every time you need to
+rebuild or restart your web app**. If it's not an issue, check out
+[Webpack dev middleware](https://github.com/aspnet/JavaScriptServices/tree/dev/src/Microsoft.AspNetCore.SpaServices#webpack-dev-middleware).
+
+Though it's not a big deal to do `npm run start` to start the dev server, there
+is
+[NPM Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.NPMTaskRunner)
+extension for Visual Studio, which lets you do this from the IDE and even bind
+it to project opening.
 
 ## Default configuration
 
