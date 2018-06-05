@@ -28,7 +28,7 @@ public void ConfigureServices(IServiceCollection services)
     services.AddWebpack();
 }
 
-public void Configure(IApplicationBuilder app)
+public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 {
     app.UseWebpack(withDevServer: env.IsDevelopment());
     app.UseStaticFiles();
