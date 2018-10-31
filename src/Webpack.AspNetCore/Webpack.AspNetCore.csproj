@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>2.0.0-beta3</Version>
+    <Version>2.0.0-beta4</Version>
     <Authors>Sergey Solovev</Authors>
     <Description>ASP.NET Core 2.0 extension for using webpack assets in your views. Provides a single API for injecting the static and the dev server assets' paths into razor views. Automatically reloads the static assets' paths when the manifest file changes. Serves the dev server assets through a reverse proxy middleware and the static assets through StaticFile middleware.</Description>
     <Copyright>Copyright © Sergey Solovev</Copyright>
