@@ -1,4 +1,4 @@
-﻿using System.Net.Http;
+using System.Net.Http;
 
 namespace Webpack.AspNetCore.DevServer.Internal
 {
@@ -20,10 +20,10 @@ namespace Webpack.AspNetCore.DevServer.Internal
             {
                 AllowAutoRedirect = false,
                 UseCookies = false,
-                UseProxy = false
+                UseProxy = false,
             };
         }
 
-        public HttpMessageHandler GetMessageHandler() => handlerInstance;
+        public HttpClientHandler GetMessageHandler() => handlerInstance;
     }
 }

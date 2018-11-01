@@ -41,5 +41,10 @@ namespace Webpack.AspNetCore.DevServer
         /// Scheme. Default: http
         /// </summary>
         public string Scheme { get; set; } = "http";
+
+        /// <summary>
+        /// Toggle server certificate validation if <see cref="Scheme"/> is 'https'
+        /// </summary>
+        public bool ValidateServerCert { get; set; } = true;
     }
 }
