@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -33,7 +33,7 @@ namespace Webpack.AspNetCore.DevServer.Internal
 
             this.next = next ?? throw new ArgumentNullException(nameof(next));
             this.devServerHost = context.DevServerHost;
-            this.backchannel = backchannelFactory.Create(context.DevServerUri);
+            this.backchannel = backchannelFactory.Create(context.DevServerUri, context.Options.ValidateServerCert);
         }
 
         public async Task Invoke(HttpContext context, DevServerAssetPathRepository repository)

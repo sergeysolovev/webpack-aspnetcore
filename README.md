@@ -190,7 +190,7 @@ public void ConfigureServices(IServiceCollection services)
             options.ManifestFileName = "asset-manifest.json";
             options.Host = "192.167.1.100";
             options.Port = 8081;
-            opts.Scheme = "https";
+            options.Scheme = "https";
         });
     // ...
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 
 namespace Webpack.AspNetCore.DevServer.Internal
@@ -16,9 +16,14 @@ namespace Webpack.AspNetCore.DevServer.Internal
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public HttpClient Create(Uri baseAddress)
+        public HttpClient Create(Uri baseAddress, bool validateCert)
         {
             var handler = context.GetMessageHandler();
+
+            // We don't always want to validate when connecting locally. This is only for dev anyways, right?
+            if (!validateCert)
+                handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, certChain, policyErrors) => true;
+
             return new HttpClient(handler, disposeHandler: false)
             {
                 BaseAddress = baseAddress

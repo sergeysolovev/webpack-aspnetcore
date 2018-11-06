@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -37,7 +37,7 @@ namespace Webpack.AspNetCore.DevServer.Internal
                 throw new ArgumentNullException(nameof(backchannelFactory));
             }
 
-            backchannel = backchannelFactory.Create(context.ManifestUri);
+            backchannel = backchannelFactory.Create(context.ManifestUri, context.Options.ValidateServerCert);
             backchannel.DefaultRequestHeaders.Add("Connection", "keep-alive");
         }
 
