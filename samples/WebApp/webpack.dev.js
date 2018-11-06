@@ -1,4 +1,4 @@
-﻿const path = require('path');
+const path = require('path');
 const autoprefixer = require('autoprefixer');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -19,6 +19,7 @@ const config = {
   },
   devServer: {
     port: 8080,
+    https: false,
     contentBase: false,
     compress: true,
     quiet: false,
