@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Webpack.AspNetCore.Internal;
 
@@ -43,7 +43,7 @@ namespace Webpack.AspNetCore.Static.Internal
                 {
                     var manifestJson = await manifestReader.ReadToEndAsync();
 
-                    return JsonConvert.DeserializeObject<Dictionary<string, string>>(
+                    return JsonSerializer.Deserialize<Dictionary<string, string>>(
                         manifestJson
                     );
                 }

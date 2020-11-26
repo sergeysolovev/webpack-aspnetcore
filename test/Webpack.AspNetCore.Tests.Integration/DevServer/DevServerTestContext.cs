@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
+using BasicWebSite;
 
 namespace Webpack.AspNetCore.Tests.Integration.DevServer
 {
@@ -19,28 +19,13 @@ namespace Webpack.AspNetCore.Tests.Integration.DevServer
         public DevServerTestContext()
         {
             var builder = new WebHostBuilder()
-                .UseContentRoot(WebSite.GetContentRoot())
                 .ConfigureServices(services =>
-                {
-                    services.AddMvc();
-
-                    services.AddWebpack().AddDevServerOptions(opts =>
-                    {
-                        opts.PublicPath = publicPath;
-                        opts.Port = 8081;
-                        opts.ManifestFileName = "webpack-assets.json";
-                    });
-
                     services.AddSingleton<IHttpContextAccessor>(
                         new CustomHttpContextAccessor(publicPath)
-                    );
-                })
-                .Configure(app =>
-                {
-                    app.UsePathBase(publicPath);
-                    app.UseWebpackDevServer();
-                    app.UseMvcWithDefaultRoute();
-                });
+                    )
+                )
+                .UseStartup<Startup>()
+                .UseContentRoot(WebSite.GetContentRoot());
 
             server = new TestServer(builder);
             client = server.CreateClient();

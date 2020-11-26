@@ -14,7 +14,7 @@ namespace Webpack.AspNetCore.Static.Internal
         private readonly IFileProvider fileProvider;
         private readonly StaticOptions options;
 
-        public StaticContext(IOptions<StaticOptions> optionsAccessor, IHostingEnvironment env)
+        public StaticContext(IOptions<StaticOptions> optionsAccessor, IWebHostEnvironment env)
         {
             if (optionsAccessor == null)
             {
