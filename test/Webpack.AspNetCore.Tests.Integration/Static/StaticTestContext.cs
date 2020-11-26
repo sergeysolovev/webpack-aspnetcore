@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +6,7 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using BasicWebSite;
 using Webpack.AspNetCore.Static.Internal;
 
 namespace Webpack.AspNetCore.Tests.Integration.Static
@@ -48,28 +48,11 @@ namespace Webpack.AspNetCore.Tests.Integration.Static
                     .UseContentRoot(WebSite.GetContentRoot())
                     .UseWebRoot(webRoot)
                     .ConfigureServices(services =>
-                    {
-                        services.AddMvc();
-                        services.AddWebpack().AddStaticOptions(opts =>
-                        {
-                            opts.RequestPath = "/public/";
-                            opts.ManifestDirectoryPath = "/dist/";
-                            opts.OnPrepareResponse = respContext =>
-                                respContext.Context.Response.Headers.Add(
-                                    key: "Cache-control",
-                                    value: "public,max-age=31536000"
-                                );
-                            opts.UseStaticFileMiddleware = true;
-                        });
-
                         services.AddSingleton<IHttpContextAccessor>(
                             new CustomHttpContextAccessor()
-                        );
-                    })
-                    .Configure(app => {
-                        app.UseWebpackStatic();
-                        app.UseMvcWithDefaultRoute();
-                    });
+                        )
+                    )
+                    .UseStartup<StartupWithStaticFileOption>();
 
                 server = new TestServer(builder);
                 setupWaitingForStorageUpdate();

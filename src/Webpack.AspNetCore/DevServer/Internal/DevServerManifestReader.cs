@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Webpack.AspNetCore.Internal;
 
@@ -54,7 +54,7 @@ namespace Webpack.AspNetCore.DevServer.Internal
                     }
 
                     var manifestJson = await response.Content.ReadAsStringAsync();
-                    manifest = JsonConvert.DeserializeObject<Dictionary<string, string>>(manifestJson);
+                    manifest = JsonSerializer.Deserialize<Dictionary<string, string>>(manifestJson);
 
                     CacheManifest(etag, manifest);
 
